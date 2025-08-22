@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { scroll-behavior: smooth; }
+
+/* blinking caret for the typewriter */
+@keyframes caret { 0%,49% { border-color: transparent } 50%,100% { border-color: currentColor } }
+.animate-caret { animation: caret 1s step-end infinite; }
+
+/* gentle floating blobs */
+@keyframes float {
+  0% { transform: translate3d(0,0,0) rotate(0deg); }
+  50% { transform: translate3d(12px,-16px,0) rotate(1deg); }
+  100% { transform: translate3d(0,0,0) rotate(0deg); }
+}
+.animate-float-slow { animation: float 18s ease-in-out infinite; }
+.animate-float-slower { animation: float 28s ease-in-out infinite; }
+
+/* scanning beam */
+@keyframes scan {
+  0% { transform: translateX(-20%); opacity:.25 }
+  50% { opacity:.35 }
+  100% { transform: translateX(20%); opacity:.25 }
+}
+.animate-scan { animation: scan 12s linear infinite; }
