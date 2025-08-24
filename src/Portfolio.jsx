@@ -1,375 +1,333 @@
-import { useMemo, useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { Github, Linkedin, Mail, Award, Code, FolderOpen, Rocket, Star, Cpu, Cloud, Database, ExternalLink, Phone } from "lucide-react";
+import { useEffect } from "react";
+import { motion, useScroll, useSpring } from "framer-motion";
+import { ReactTyped } from "react-typed";
 
-// ====== Quick Links (edit these) ======
-const LINKS = {
-  email: "mailto:gaaisha05@gmail.com",
-  phone: "tel:+919985140205",
-  github: "https://github.com/gitsish",
-  linkedin: "https://www.linkedin.com/in/aaisha-sultana-guduru-877b21302",
-  leetcode: "https://leetcode.com/u/AAISHASULTANA/",
-  codechef: "https://www.codechef.com/users/eblmjo555",
-  hackerrank: "https://www.hackerrank.com/profile/22501A4401",
-  resume: "/AAISHA_SULTANA_G_RESUME.pdf",
+// --- Simple smooth-scroll helper ---
+const scrollToId = (id) => {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 };
 
-// ====== Tiny typewriter with blinking caret (no extra libs) ======
-function Typewriter({ words, speed = 80, pause = 1100 }) {
-  const [text, setText] = useState("");
-  const [i, setI] = useState(0);
-  const [phase, setPhase] = useState("typing"); // typing | deleting
-  useEffect(() => {
-    const current = words[i % words.length];
-    let t;
-    if (phase === "typing") {
-      if (text.length < current.length) {
-        t = setTimeout(() => setText(current.slice(0, text.length + 1)), speed);
-      } else {
-        t = setTimeout(() => setPhase("deleting"), pause);
-      }
-    } else {
-      if (text.length > 0) {
-        t = setTimeout(() => setText(current.slice(0, text.length - 1)), Math.max(40, speed * 0.6));
-      } else {
-        setI((v) => v + 1);
-        setPhase("typing");
-      }
-    }
-    return () => clearTimeout(t);
-  }, [text, i, phase, words, speed, pause]);
-  return <span className="border-r-2 pr-1 animate-caret">{text}</span>;
-}
-function Background() {
-  return (
-    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      {/* Base color — dark teal/blue */}
-      <div className="absolute inset-0 bg-[#102a43]" />
+// --- Reusable animated section wrapper ---
+const AnimatedSection = ({ id, children }) => (
+  <section id={id} className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6 }}
+      className="space-y-6"
+    >
+      {children}
+    </motion.div>
+  </section>
+);
 
-      {/* Layered radial washes */}
-      <div className="absolute inset-0 bg-[radial-gradient(1000px_1000px_at_20%_-10%,rgba(16,185,129,0.25),transparent_70%),radial-gradient(900px_900px_at_80%_10%,rgba(34,211,238,0.22),transparent_70%),radial-gradient(900px_900px_at_50%_100%,rgba(59,130,246,0.20),transparent_70%)]" />
-
-      {/* Subtle grid overlay */}
-      <div
-        className="absolute inset-0 opacity-15 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to_right,rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(to_bottom,rgba(255,255,255,.05) 1px,transparent 1px)",
-          backgroundSize: "24px 24px",
-        }}
-      />
-
-      {/* Scanning beam */}
-      <div className="absolute -inset-x-10 top-32 h-40 bg-[linear-gradient(90deg,transparent,rgba(16,185,129,.28),rgba(34,211,238,.28),transparent)] blur-2xl animate-scan" />
-
-      {/* Floating blobs */}
-      <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-emerald-500/20 blur-3xl animate-float-slow" />
-      <div className="absolute -bottom-40 -right-32 h-[28rem] w-[28rem] rounded-full bg-orange-500/20 blur-3xl animate-float-slower" />
-    </div>
-  );
-}
-
-
-// ====== Data ======
-const projects = [
-  {
-    title: "Early Heart Disease Prediction",
-    blurb: "ML research comparing SVM, KNN, ANN, and AdaBoost for risk prediction.",
-    stack: ["Python", "scikit-learn", "Pandas"],
-    links: [{ href: LINKS.github, label: "Code" }],
-  },
-  {
-    title: "Brain Tumor Classification (CNN)",
-    blurb: "Deep learning classifier for MRI tumor subtypes with strong precision.",
-    stack: ["Python", "TensorFlow", "OpenCV"],
-    links: [{ href: LINKS.github, label: "Code" }],
-  },
-  {
-    title: "E‑Commerce Platform",
-    blurb: "Full‑stack capstone for seamless shopping, payments, and admin dashboard.",
-    stack: ["React", "Node.js", "MongoDB"],
-    links: [{ href: LINKS.github, label: "Demo" }],
-  },
-  {
-    title: "College Management System",
-    blurb: "MERN app to manage students, courses, and events.",
-    stack: ["MongoDB", "Express", "React", "Node"],
-    links: [{ href: LINKS.github, label: "Code" }],
-  },
-  {
-    title: "Last‑Mile Delivery Optimisation",
-    blurb: "ML + full‑stack project: route efficiency, cost reduction, emissions.",
-    stack: ["Python", "RL/OR", "FastAPI", "React"],
-    links: [{ href: LINKS.github, label: "Case Study" }],
-  },
-  {
-    title: "Netflix‑style Recommender",
-    blurb: "Collaborative filtering analytics with evaluation dashboard.",
-    stack: ["Python", "NumPy", "Matplotlib"],
-    links: [{ href: LINKS.github, label: "Notebook" }],
-  },
-];
-
-const achievements = [
-  "SmartInterviews — Diamond Ranked Smart Coder (Global rank 1211/45336)",
-  "HackerRank — Gold in Problem Solving & Python",
-  "LeetCode 1618+ | CodeChef 1430+ | Codeforces 745+",
-  "Second Prize — VRSEC TechnoFest Coding (Nation‑wide)",
-  "Flipkart GRID 7.0 — Semi‑finalist",
-  "AI4Good Hackathon — Finalist (ongoing)",
-  "MSME Hackathon — Finalist (ongoing)",
-  "Event coordinator, debate & GD awards; leadership across hackathons",
-];
-
-const internships = [
-  "AICTE‑IBM SkillsBuild — 6‑week virtual (selected)",
-  "AICTE — AWS Cloud Foundations & Data Engineering",
-  "AICTE — Google Gen‑AI virtual internship",
-  "AICTE — AWS AI & ML virtual internship",
-  "AICTE — Palo Alto Cybersecurity virtual internship",
-];
-
-const skills = [
-  { icon: <Code className="h-4 w-4"/>, name: "JavaScript, Python, Java, C++" },
-  { icon: <Cpu className="h-4 w-4"/>, name: "DSA, ML/DL" },
-  { icon: <Cloud className="h-4 w-4"/>, name: "Cloud & DevOps (AWS, Docker, K8s)" },
-  { icon: <Database className="h-4 w-4"/>, name: "MongoDB, MySQL, PostgreSQL, Firebase" },
-  { icon: <Code className="h-4 w-4"/>, name: "MERN, Django/Flask, Spring Boot" },
-];
-
-const education = [
-  { school: "PRASAD V POTLURI SIDDHARTHA INSTITUTE OF TECHNOLOGY (JNTUK)", detail: "B.Tech CSE (Data Science), CGPA 8.67, 2022–2026 — Vijayawada, A.P." },
-  { school: "Sri Chaitanya Jr. College, Vijayawada", detail: "BIE‑AP (2020–2022) — 82%" },
-  { school: "V.P. Siddhartha Public School (CBSE), Vijayawada", detail: "Class X (2020) — 93%" },
-];
-
-const certifications = [
-  "NPTEL Star — Discipline Star Award",
-  "NPTEL Elite‑Silver — Soft Skills; Joy of Computing in Python",
-  "NPTEL Elite — C++, DBMS, ML, DL, Google Cloud Foundations",
-  "Java, Django, Linux — IIT Bombay Spoken Tutorials",
-  "Infosys Springboard — Java Certification of Achievement",
-];
-
-// ====== UI helpers ======
-const TAG = ({ children }) => (
-  <span className="px-2.5 py-1 rounded-full border border-emerald-400/30 text-emerald-300/90 bg-emerald-400/10 text-xs">
+// --- Simple chip badge ---
+const Chip = ({ children }) => (
+  <span className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium">
     {children}
   </span>
 );
 
-const Section = ({ id, title, subtitle, children }) => (
-  <section id={id} className="scroll-mt-24 py-16 md:py-24">
-    <div className="max-w-6xl mx-auto px-4">
-      <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">{title}</h2>
-      {subtitle && <p className="mt-2 text-neutral-400">{subtitle}</p>}
-      <div className="mt-8">{children}</div>
+// --- Progress bar on top while scrolling ---
+const TopProgress = () => {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 20 });
+  return (
+    <motion.div
+      style={{ scaleX }}
+      className="fixed left-0 right-0 top-0 h-1 origin-left bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-rose-500 z-50"
+    />
+  );
+};
+
+// --- Nav ---
+const Nav = () => (
+  <nav className="sticky top-0 z-40 backdrop-blur dark:bg-neutral-900/70 border-b">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+      <button onClick={() => scrollToId("home")} className="font-bold tracking-tight">
+        Aaisha <span className="text-indigo-600">Portfolio</span>
+      </button>
+      <div className="hidden sm:flex gap-3">
+        {[
+          ["Projects", "projects"],
+          ["AAISearch", "aaisearch"],
+          ["Java", "java"],
+          ["Experience", "experience"],
+          ["Contact", "contact"],
+        ].map(([label, id]) => (
+          <button
+            key={id}
+            onClick={() => scrollToId(id)}
+            className="text-sm px-3 py-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800"
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+    </div>
+  </nav>
+);
+
+// --- Hero ---
+const Hero = () => (
+  <section id="home" className="relative overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]">
+      <div className="absolute -top-24 left-1/2 -translate-x-1/2 h-[32rem] w-[32rem] rounded-full bg-gradient-to-tr from-indigo-500/30 via-fuchsia-500/30 to-rose-500/30 blur-3xl" />
+    </div>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 grid md:grid-cols-2 gap-10 items-center">
+      <div>
+        <h1 className="text-3xl sm:text-5xl font-extrabold leading-tight">
+  <ReactTyped
+    strings={[
+      "Frontend Engineer",
+      "Java Developer",
+      "Data Science Student",
+      "ML Enthusiast"
+    ]}
+    typeSpeed={70}
+    backSpeed={40}
+    backDelay={900}
+    loop
+  />
+</h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="mt-4 text-neutral-600 dark:text-neutral-300 max-w-prose"
+        >
+          I build fast, accessible UIs and scalable Java backends. Explore my AAISearch project, clean component systems, and hands-on DSA in Java.
+        </motion.p>
+        <div className="mt-6 flex gap-3">
+          <a href="#aaisearch" onClick={(e)=>{e.preventDefault();scrollToId('aaisearch')}} className="px-5 py-2.5 rounded-xl bg-indigo-600 font-medium shadow">
+            See AAISearch Case Study
+          </a>
+          <a href="#projects" onClick={(e)=>{e.preventDefault();scrollToId('projects')}} className="px-5 py-2.5 rounded-xl border font-medium">
+            All Projects
+          </a>
+        </div>
+        <div className="mt-6 flex flex-wrap gap-2">
+          {["React","Vite","Tailwind","Framer Motion","TypeScript","Java","DSA","REST APIs"].map(t=> <Chip key={t}>{t}</Chip>)}
+        </div>
+      </div>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="relative"
+      >
+        {/* Replace src with your hero image */}
+        <img
+          src="/portfolioimage.png"
+          alt="Aaisha Sultana — Frontend & Java"
+          className="rounded-3xl shadow-2xl w-full object-contain"
+        />
+        
+      </motion.div>
     </div>
   </section>
 );
 
-const Card = ({ children, className = "" }) => (
-  <div className={`rounded-2xl border border-white/10 p-5 md:p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.03)] bg-white/5 backdrop-blur ${className}`}>{children}</div>
-);
+// --- AAISearch Case Study ---
+const AAISearch = () => (
+  <AnimatedSection id="aaisearch">
+    <div className="flex items-center justify-between gap-6 flex-wrap">
+      <h2 className="text-2xl sm:text-3xl font-bold">AAISearch — Full‑Stack Search Engine</h2>
+      <div className="flex gap-2">
+        <a href="https://github.com/gitsish/AAISearch-Project" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg border font-medium">GitHub</a>
+        <a href="https://aaisearch.onrender.com" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-medium">Live Demo</a>
+      </div>
+    </div>
+    <p className="text-neutral-600 dark:text-neutral-300">
+      A mini Google‑like search built with <b>Node/Express</b>, <b>React</b>, and an <b>inverted index</b> over fetched pages. It features query parsing, ranking (TF‑IDF), caching, and result snippets with highlighted keywords.
+    </p>
 
-export default function Portfolio() {
-  const year = new Date().getFullYear();
-  const nav = useMemo(() => ([
-    { id: "about", label: "About" },
-    { id: "skills", label: "Skills" },
-    { id: "projects", label: "Projects" },
-    { id: "achievements", label: "Achievements" },
-    { id: "education", label: "Education" },
-    { id: "contact", label: "Contact" },
-  ]), []);
-
-  return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100">
-      <Background />
-
-      {/* Top Nav */}
-      <div className="sticky top-0 z-50 border-b border-white/10 bg-neutral-950/70 backdrop-blur">
-        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <a href="#home" className="font-semibold tracking-tight text-white">Aaisha Sultana</a>
-          <nav className="hidden md:flex gap-6 text-sm">
-            {nav.map((n) => (
-              <a key={n.id} href={`#${n.id}`} className="text-neutral-300 hover:text-emerald-300 transition">{n.label}</a>
-            ))}
-          </nav>
-          <div className="flex items-center gap-3">
-            <a className="p-2 rounded-full border border-white/15 hover:border-emerald-400/60 transition" href={LINKS.github} aria-label="GitHub"><Github className="h-4 w-4" /></a>
-            <a className="p-2 rounded-full border border-white/15 hover:border-emerald-400/60 transition" href={LINKS.linkedin} aria-label="LinkedIn"><Linkedin className="h-4 w-4" /></a>
-            <a className="hidden md:inline-flex items-center gap-2 px-3 py-2 rounded-full border border-orange-500/50 text-orange-300 hover:bg-orange-500/10 transition" href={LINKS.resume}>
-              <span>Resume</span>
-              <ExternalLink className="h-4 w-4" />
-            </a>
-          </div>
+    <div className="grid md:grid-cols-2 gap-6 mt-6">
+      <img src="/aaisearchprojectimage.png" alt="AAISearch UI" className="rounded-2xl border shadow" />
+      <div className="space-y-4">
+        <div className="rounded-2xl border p-4">
+          <p className="text-sm font-semibold mb-1">Key Features</p>
+          <ul className="list-disc pl-5 text-sm leading-6">
+            <li>Instant search with debounced input & keyboard nav</li>
+            <li>Inverted index + TF‑IDF ranking for relevance</li>
+            <li>Snippet generation with highlighted matches</li>
+            <li>Server‑side caching (LRU) & rate‑limited fetcher</li>
+            <li>Typed API responses, error boundaries, 404 states</li>
+          </ul>
+        </div>
+        <div className="rounded-2xl border p-4">
+          <p className="text-sm font-semibold mb-1">Impact</p>
+          <ul className="list-disc pl-5 text-sm leading-6">
+            <li>p95 response under 120ms for warm cache (local)</li>
+            <li>Zero‑blocking UI at 60fps on mid‑range devices</li>
+            <li>Clean architecture → easy to extend with filters</li>
+          </ul>
         </div>
       </div>
-
-      {/* Hero */}
-      <header id="home" className="relative overflow-hidden">
-        <div className="max-w-6xl mx-auto px-4 py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <motion.h1 initial={{opacity:0, y:10}} animate={{opacity:1,y:0}} transition={{duration:0.6}} className="text-4xl md:text-6xl font-black tracking-tight leading-tight text-white">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-orange-300 to-emerald-300">Aaisha Sultana</span>
-            </motion.h1>
-
-            <p className="mt-3 text-2xl md:text-3xl font-semibold text-neutral-200">
-              <Typewriter words={["Full‑Stack Developer", "MERN Specialist", "Cloud & DevOps", "Data/ML Enthusiast"]} />
-            </p>
-
-            <p className="mt-5 text-neutral-300">
-              I build reliable, scalable software and data products across web, ML/DL, and cloud. I love converting ideas into shipped
-              features and research into impact.
-            </p>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a href="#projects" className="px-5 py-2.5 rounded-full border border-emerald-400/60 text-emerald-300 hover:bg-emerald-400/10 font-medium transition">View Projects</a>
-              <a href={LINKS.resume} className="px-5 py-2.5 rounded-full border border-orange-500/60 text-orange-300 hover:bg-orange-500/10 font-medium transition">Download Resume</a>
-            </div>
-            <div className="mt-6 flex flex-wrap gap-2">
-              <TAG>Open to SDE/ML Internships 2025–26</TAG>
-              <TAG>Vijayawada • India</TAG>
-            </div>
-          </div>
-
-          <Card className="md:ml-auto">
-            <div className="flex items-start gap-4">
-              <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-emerald-300/30 to-orange-300/30 border border-white/10" />
-              <div>
-                <h3 className="font-semibold text-xl text-white">What I bring</h3>
-                <ul className="mt-2 space-y-1 text-sm text-neutral-300 list-disc pl-5">
-                  <li>Full‑stack: React/Node, Django/Flask, Spring Boot</li>
-                  <li>ML/DL: scikit‑learn, TensorFlow; data wrangling</li>
-                  <li>Cloud & Ops: AWS, Docker, Kubernetes, MLOps</li>
-                </ul>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <TAG>Problem Solving</TAG>
-                  <TAG>Hackathon‑ready</TAG>
-                  <TAG>Team Leadership</TAG>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-      </header>
-
-      <Section id="about" title="About">
-        <div className="grid md:grid-cols-3 gap-6">
-          <Card>
-            <h3 className="font-semibold flex items-center gap-2 text-white"><Rocket className="h-4 w-4 text-orange-300"/> Career Objective</h3>
-            <p className="mt-2 text-sm text-neutral-300">
-              A dynamic and results‑driven developer with strong full‑stack, ML/DL, and big data foundations — eager to learn fast and
-              ship impactful products.
-            </p>
-          </Card>
-          <Card>
-            <h3 className="font-semibold flex items-center gap-2 text-white"><FolderOpen className="h-4 w-4 text-emerald-300"/> Internships</h3>
-            <ul className="mt-2 space-y-2 text-sm text-neutral-300">
-              {internships.map((i) => (<li key={i} className="flex gap-2"><span>•</span><span>{i}</span></li>))}
-            </ul>
-          </Card>
-          <Card>
-            <h3 className="font-semibold flex items-center gap-2 text-white"><Award className="h-4 w-4 text-orange-300"/> Certifications</h3>
-            <ul className="mt-2 space-y-2 text-sm text-neutral-300">
-              {certifications.map((c) => (<li key={c} className="flex gap-2"><span>•</span><span>{c}</span></li>))}
-            </ul>
-          </Card>
-        </div>
-      </Section>
-
-      <Section id="skills" title="Skills">
-        <div className="grid md:grid-cols-2 gap-6">
-          {skills.map((s) => (
-            <Card key={s.name}>
-              <div className="flex items-center gap-3 text-neutral-200">
-                <span className="text-emerald-300">{s.icon}</span>
-                <span className="font-medium">{s.name}</span>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </Section>
-
-      <Section id="projects" title="Projects" subtitle="Selected work & capstones">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((p) => (
-            <Card key={p.title} className="hover:shadow-[0_0_0_1px_rgba(16,185,129,0.25)] hover:border-emerald-400/30 transition">
-              <h3 className="font-semibold text-lg text-white">{p.title}</h3>
-              <p className="mt-2 text-sm text-neutral-300">{p.blurb}</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {p.stack.map((t) => (
-                  <span key={t} className="text-xs px-2 py-1 rounded-md border border-white/15 text-neutral-200">{t}</span>
-                ))}
-              </div>
-              <div className="mt-4 flex gap-3">
-                {p.links?.map((l) => (
-                  <a key={l.label} className="inline-flex items-center gap-1 text-sm text-emerald-300 hover:underline" href={l.href}>
-                    <ExternalLink className="h-4 w-4" /> {l.label}
-                  </a>
-                ))}
-              </div>
-            </Card>
-          ))}
-        </div>
-      </Section>
-
-      <Section id="achievements" title="Achievements">
-        <Card>
-          <ul className="grid md:grid-cols-2 gap-x-6 gap-y-3 text-sm">
-            {achievements.map((a) => (
-              <li key={a} className="flex items-start gap-2 text-neutral-200"><Star className="h-4 w-4 mt-0.5 text-orange-300"/><span>{a}</span></li>
-            ))}
-          </ul>
-          <div className="mt-4 flex flex-wrap gap-3">
-            <a className="px-3 py-2 rounded-full border border-white/15 text-neutral-200 hover:border-emerald-400/50" href={LINKS.leetcode}>LeetCode</a>
-            <a className="px-3 py-2 rounded-full border border-white/15 text-neutral-200 hover:border-emerald-400/50" href={LINKS.codechef}>CodeChef</a>
-            <a className="px-3 py-2 rounded-full border border-white/15 text-neutral-200 hover:border-emerald-400/50" href={LINKS.hackerrank}>HackerRank</a>
-          </div>
-        </Card>
-      </Section>
-
-      <Section id="education" title="Education">
-        <div className="grid md:grid-cols-3 gap-6">
-          {education.map((e) => (
-            <Card key={e.school}>
-              <h3 className="font-semibold text-white">{e.school}</h3>
-              <p className="mt-1 text-sm text-neutral-300">{e.detail}</p>
-            </Card>
-          ))}
-        </div>
-      </Section>
-
-      <Section id="contact" title="Contact">
-        <Card>
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div>
-              <h3 className="font-semibold text-xl text-white">Let’s build something great.</h3>
-              <p className="text-sm text-neutral-300 mt-1">Reach out for opportunities, collaborations, and hackathons.</p>
-              <div className="mt-3 flex flex-wrap gap-3">
-                <a href={LINKS.email} className="px-3 py-2 rounded-full border border-emerald-400/50 text-emerald-300 inline-flex items-center gap-2 hover:bg-emerald-400/10"><Mail className="h-4 w-4"/> gaaisha05@gmail.com</a>
-                <a href={LINKS.phone} className="px-3 py-2 rounded-full border border-orange-500/50 text-orange-300 inline-flex items-center gap-2 hover:bg-orange-500/10"><Phone className="h-4 w-4"/> +91 99851 40205</a>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <a className="p-2 rounded-full border border-white/15 hover:border-emerald-400/60" href={LINKS.github}><Github className="h-4 w-4"/></a>
-              <a className="p-2 rounded-full border border-white/15 hover:border-emerald-400/60" href={LINKS.linkedin}><Linkedin className="h-4 w-4"/></a>
-            </div>
-          </div>
-        </Card>
-      </Section>
-
-      <footer className="py-12 border-t border-white/10">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-neutral-400">
-          <p>© {year} Aaisha Sultana. Built with React + Tailwind.</p>
-          <div className="flex gap-4">
-            <a href="#about" className="hover:text-emerald-300">About</a>
-            <a href="#projects" className="hover:text-emerald-300">Projects</a>
-            <a href={LINKS.resume} className="hover:text-emerald-300">Resume</a>
-          </div>
-        </div>
-      </footer>
     </div>
+
+    <div className="grid md:grid-cols-3 gap-4 mt-6">
+      {["React","Node.js","Express","Vite","Tailwind","Framer Motion","Axios","LRU Cache","Vercel","Render"].map(t => (
+        <div key={t} className="rounded-xl border p-3 text-sm flex items-center justify-between">
+          <span>{t}</span><span className="text-xs text-neutral-500">tool</span>
+        </div>
+      ))}
+    </div>
+
+    <div className="mt-6 rounded-2xl border p-4">
+      <p className="text-sm font-semibold mb-1">Design Decisions</p>
+      <ul className="list-disc pl-5 text-sm leading-6">
+        <li>Chose inverted index + TF‑IDF for explainable relevance over opaque vector search for small corpora</li>
+        <li>Client keeps UI state minimal; heavy lifting on API for determinism</li>
+        <li>Deploy split: UI on Vercel (edge), API on Render (autoscale)</li>
+      </ul>
+    </div>
+  </AnimatedSection>
+);
+// --- Java Skills ---
+const JavaSkills = () => (
+  <AnimatedSection id="java">
+    <h2 className="text-2xl sm:text-3xl font-bold">Java — Core Skills</h2>
+
+    <div className="mt-6 grid sm:grid-cols-2 bg-white/5 md:grid-cols-3 gap-1">
+      <div className="rounded-xl border p-4 dark:bg-neutral-900/40 ">
+        <p className="font-semibold ">OOP Basics</p>
+        <p className="  ">Encapsulation, Inheritance, Polymorphism</p>
+      </div>
+
+      <div className="rounded-xl border p-4 bg-white/5 dark:bg-neutral-900/40">
+        <p className="font-semibold">Collections</p>
+        <p className="">Lists, Sets, Maps</p>
+      </div>
+
+      <div className="rounded-xl border p-4 bg-white/5 dark:bg-neutral-900/40">
+        <p className="font-semibold">Exception Handling</p>
+        <p className="">Try–Catch, Custom Exceptions</p>
+      </div>
+
+      <div className="rounded-xl border p-4 bg-white/5 dark:bg-neutral-900/40">
+        <p className="font-semibold">Multithreading</p>
+        <p className="">Threads, Synchronization basics</p>
+      </div>
+
+      <div className="rounded-xl border p-4 bg-white/5 dark:bg-neutral-900/40">
+        <p className="font-semibold">Streams & Lambdas</p>
+        <p className="">Functional style, map/filter/reduce</p>
+      </div>
+
+      <div className="rounded-xl border p-4 bg-white/5 dark:bg-neutral-900/40">
+        <p className="font-semibold">REST APIs</p>
+        <p className="">Basic Spring Boot, JSON handling</p>
+      </div>
+    </div>
+  </AnimatedSection>
+);
+
+// --- Projects Grid ---
+const Projects = () => (
+  <AnimatedSection id="projects">
+    <h2 className="text-2xl sm:text-3xl font-bold">Selected Projects</h2>
+    <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {[
+        {
+          title: "AAISearch",
+          desc: "Full‑stack search with inverted index + TF‑IDF.",
+          img: "/aaisearchprojectimage.png",
+          href: "https://aaisearchengine.vercel.app/",
+        },
+        {
+          title: "EcoRouteAI Project",
+          desc: "Last‑mile route optimizer with RL baseline.",
+          img: "/ecoroutingaiimage.png",
+          href: "https://github.com/gitsish/AI_LAST_MILE_DELIVERY_OPTIMISER",
+        },
+        {
+          title: "Portfolio Website",
+          desc: "This site — motion, theming, and a11y.",
+          img: "/portfolioimage.png",
+          href: "https://aaisha-portfolio-coral.vercel.app/",
+        },
+        {
+  title: "PVPSIT-College Management System Website",
+  desc: "Full-stack web app to manage students, faculty, courses, and exams with secure authentication and role-based dashboards.",
+  img: "/collegemanagementsystemimage.png",
+  href: " https://pvpsit-project-2025.onrender.com",
+},
+{
+  title: "Brain Tumor Classification (Colab)",
+  desc: "Deep learning CNN model on MRI scans, deployed in Google Colab, achieving high accuracy in classifying tumor types.",
+  img: "/braintumorimage.png",
+  href: "https://github.com/gitsish/BrainTumorClassification-ADeepLearningProject",
+},
+      ].map((p) => (
+        <a key={p.title} href={p.href} target={p.href.startsWith("http")?"_blank":"_self"} rel="noreferrer" className="group rounded-2xl border overflow-hidden hover:shadow-lg transition">
+          <div className="aspect-[16/10] overflow-hidden">
+            <img src={p.img} alt={p.title} className="w-full h-full object-cover group-hover:scale-[1.03] transition"/>
+          </div>
+          <div className="p-4">
+            <p className="font-semibold">{p.title}</p>
+            <p className="bg-white/10">{p.desc}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </AnimatedSection>
+);
+
+//--- Experience / Timeline ---
+const Experience = () => (
+  <AnimatedSection id="experience">
+    <h2 className="text-2xl sm:text-3xl font-bold">Experience & Highlights</h2>
+    <div className="mt-6 relative before:absolute before:left-4 before:top-0 before:bottom-0 before:w-0.5 before:bg-neutral-200  bg-white/10 dark:before:bg-neutral-800">
+      {[
+        { time: "Aug 2025", title: "Cognizant Digital Nurture 4.0", text: "Selected  and have undergone intensive training in Java, DSA, and full-stack skills with industry projects." },
+        { time: "Jul 2025", title: "EcoRouteAI — Sparkathon", text: "Built reinforcement learning baseline with visual analytics and demo pipeline." },
+        { time: "May 2025", title: "AAISearch v1", text: "Developed end-to-end search engine with inverted index and TF-IDF ranking." },
+        { time: "Apr 2025", title: "Brain Tumor Classification", text: "Created CNN-based deep learning model for MRI scan classification with high accuracy." },
+        { time: "Mar 2025", title: "College Management System", text: "Built MERN stack app with secure role-based login and responsive dashboards." },
+      ].map((e,i)=> (
+        <div key={i} className="pl-12 py-4 relative">
+          <div className="absolute left-[14px] mt-2 h-3 w-3 rounded-full bg-indigo-800 " />
+          <p className=" bg-white/10">{e.time}</p>
+          <p className="font-semibold bg-white/10">{e.title}</p>
+          <p className="text-sm bg-white/10">{e.text}</p>
+        </div>
+      ))}
+    </div>
+  </AnimatedSection>
+);
+
+// --- Contact ---
+const Contact = () => (
+  <AnimatedSection id="contact">
+    <div className="rounded-3xl border border-white/15 p-6 lg:p-10 bg-white/10 backdrop-blur-md">
+      <h2 className="text-2xl sm:text-3xl font-bold">Let’s Talk</h2>
+      <p className="bg-white/10 ">Open to full‑time Frontend / Java roles. Based in India (IST).</p>
+      <div className="mt-4 flex flex-wrap gap-3">
+        <a href="mailto:gaaisha05@gmail.com" className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-medium shadow">Email</a>
+        <a href="https://www.linkedin.com/in/aaisha-sultana-guduru-877b21302" target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-xl border font-medium">LinkedIn</a>
+        <a href="https://github.com/gitsish" target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-xl border font-medium">GitHub</a>
+      </div>
+    </div>
+  </AnimatedSection>
+);
+
+export default function EnhancedPortfolio() {
+  useEffect(()=>{ document.documentElement.classList.add("scroll-smooth"); },[]);
+  return (
+    <main className="min-h-screen relative text-white">
+      <TopProgress />
+      <Nav />
+      <Hero />
+      <AAISearch />
+      <JavaSkills />
+      <Projects />
+      <Experience />
+      <Contact />
+      <footer className="py-12 text-center text-sm text-neutral-500">© {new Date().getFullYear()} Aaisha Sultana — Built with React, Vite, Tailwind, Framer Motion</footer>
+    </main>
   );
 }
