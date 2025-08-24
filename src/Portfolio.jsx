@@ -138,7 +138,7 @@ const AAISearch = () => (
       <h2 className="text-2xl sm:text-3xl font-bold">AAISearch — Full‑Stack Search Engine</h2>
       <div className="flex gap-2">
         <a href="https://github.com/gitsish/AAISearch-Project" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg border font-medium">GitHub</a>
-        <a href="https://aaisearch.onrender.com" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-medium">Live Demo</a>
+        <a href="https://aaisearchengine.vercel.app/" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-medium">Live Demo</a>
       </div>
     </div>
     <p className="text-neutral-600 dark:text-neutral-300">
