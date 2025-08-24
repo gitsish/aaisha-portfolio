@@ -1,12 +1,26 @@
-# React + Vite
+# 🌐 Aaisha Sultana — Portfolio Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is my personal portfolio website, built with **React + Vite + TailwindCSS + Framer Motion**.  
+It showcases my projects, skills, and experiences in **Java Development, Full-Stack Engineering, and Data Science**.
 
-Currently, two official plugins are available:
+🚀 **Live Site:** [aaisha-portfolio-coral.vercel.app](https://aaisha-portfolio-coral.vercel.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Dynamic Typing Hero** → rotating titles (*Frontend Engineer, Java Developer, Data Science Student, ML Enthusiast*).
+- **Smooth Animations** → powered by Framer Motion.
+- **Dark Neon Background** → custom-built with Tailwind + CSS layers.
+- **Responsive UI** → works on desktop, tablet, and mobile.
+- **Projects Gallery** → highlights AAISearch, EcoRouteAI, College Management System, Brain Tumor Classification, and more.
+- **Timeline Section** → Experience & Highlights including Cognizant DN 4.0, hackathons, and key projects.
+- **Contact Section** → quick links to Email, LinkedIn, GitHub.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React, Vite, TailwindCSS, Framer Motion
+- **Deployment:** Vercel
+- **Other Tools:** GitHub for version control
