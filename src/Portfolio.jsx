@@ -139,8 +139,8 @@ const NetworkMonitor = () => (
     <div className="flex items-center justify-between gap-6 flex-wrap">
       <h2 className="text-2xl sm:text-3xl font-bold">Network Monitor Dashboard — Case Study</h2>
       <div className="flex gap-2">
-        <a href="https://github.com/gitsish/NetworkMonitor/blob/main/README.md" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg border font-medium">GitHub</a>
-        <a href="https://github.com/gitsish/NetworkMonitor/blob/main/README.md" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-medium">Project</a>
+        <a href="https://github.com/gitsish/network-probe--api/blob/main/README.md" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg border font-medium">GitHub</a>
+        <a href="https://github.com/gitsish/NetworkMonitor/blob/main/README.m" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-medium">Project</a>
       </div>
     </div>
 
