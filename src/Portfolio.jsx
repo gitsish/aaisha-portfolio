@@ -84,7 +84,8 @@ const Hero = () => (
       "Frontend Engineer",
       "Java Developer",
       "Data Science Student",
-      "ML Enthusiast"
+      "ML Enthusiast",
+      "Cloud & Network Engineer"
     ]}
     typeSpeed={70}
     backSpeed={40}
@@ -135,14 +136,14 @@ const Hero = () => (
 const AAISearch = () => (
   <AnimatedSection id="aaisearch">
     <div className="flex items-center justify-between gap-6 flex-wrap">
-      <h2 className="text-2xl sm:text-3xl font-bold">AAISearch — Full‑Stack Search Engine</h2>
+      <h2 className="text-2xl sm:text-3xl font-bold">AAISearch — Full-Stack Search Engine</h2>
       <div className="flex gap-2">
         <a href="https://github.com/gitsish/AAISearch-Project" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg border font-medium">GitHub</a>
         <a href="https://aaisearchengine.vercel.app/" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-medium">Live Demo</a>
       </div>
     </div>
     <p className="text-neutral-600 dark:text-neutral-300">
-      A mini Google‑like search built with <b>Node/Express</b>, <b>React</b>, and an <b>inverted index</b> over fetched pages. It features query parsing, ranking (TF‑IDF), caching, and result snippets with highlighted keywords.
+      A mini Google-like search built with <b>Node/Express</b>, <b>React</b>, and an <b>inverted index</b> over fetched pages. It features query parsing, ranking (TF-IDF), caching, and result snippets with highlighted keywords.
     </p>
 
     <div className="grid md:grid-cols-2 gap-6 mt-6">
@@ -152,9 +153,9 @@ const AAISearch = () => (
           <p className="text-sm font-semibold mb-1">Key Features</p>
           <ul className="list-disc pl-5 text-sm leading-6">
             <li>Instant search with debounced input & keyboard nav</li>
-            <li>Inverted index + TF‑IDF ranking for relevance</li>
+            <li>Inverted index + TF-IDF ranking for relevance</li>
             <li>Snippet generation with highlighted matches</li>
-            <li>Server‑side caching (LRU) & rate‑limited fetcher</li>
+            <li>Server-side caching (LRU) & rate-limited fetcher</li>
             <li>Typed API responses, error boundaries, 404 states</li>
           </ul>
         </div>
@@ -162,7 +163,7 @@ const AAISearch = () => (
           <p className="text-sm font-semibold mb-1">Impact</p>
           <ul className="list-disc pl-5 text-sm leading-6">
             <li>p95 response under 120ms for warm cache (local)</li>
-            <li>Zero‑blocking UI at 60fps on mid‑range devices</li>
+            <li>Zero-blocking UI at 60fps on mid-range devices</li>
             <li>Clean architecture → easy to extend with filters</li>
           </ul>
         </div>
@@ -180,7 +181,7 @@ const AAISearch = () => (
     <div className="mt-6 rounded-2xl border p-4">
       <p className="text-sm font-semibold mb-1">Design Decisions</p>
       <ul className="list-disc pl-5 text-sm leading-6">
-        <li>Chose inverted index + TF‑IDF for explainable relevance over opaque vector search for small corpora</li>
+        <li>Chose inverted index + TF-IDF for explainable relevance over opaque vector search for small corpora</li>
         <li>Client keeps UI state minimal; heavy lifting on API for determinism</li>
         <li>Deploy split: UI on Vercel (edge), API on Render (autoscale)</li>
       </ul>
@@ -234,13 +235,13 @@ const Projects = () => (
       {[
         {
           title: "AAISearch",
-          desc: "Full‑stack search with inverted index + TF‑IDF.",
+          desc: "Full-stack search with inverted index + TF-IDF.",
           img: "/aaisearchprojectimage.png",
           href: "https://aaisearchengine.vercel.app/",
         },
         {
           title: "EcoRouteAI Project",
-          desc: "Last‑mile route optimizer with RL baseline.",
+          desc: "Last-mile route optimizer with RL baseline.",
           img: "/ecoroutingaiimage.png",
           href: "https://github.com/gitsish/AI_LAST_MILE_DELIVERY_OPTIMISER",
         },
@@ -251,17 +252,23 @@ const Projects = () => (
           href: "https://aaisha-portfolio-coral.vercel.app/",
         },
         {
-  title: "PVPSIT-College Management System Website",
-  desc: "Full-stack web app to manage students, faculty, courses, and exams with secure authentication and role-based dashboards.",
-  img: "/collegemanagementsystemimage.png",
-  href: " https://pvpsit-project-2025.onrender.com",
-},
-{
-  title: "Brain Tumor Classification (Colab)",
-  desc: "Deep learning CNN model on MRI scans, deployed in Google Colab, achieving high accuracy in classifying tumor types.",
-  img: "/braintumorimage.png",
-  href: "https://github.com/gitsish/BrainTumorClassification-ADeepLearningProject",
-},
+          title: "Network Monitor Dashboard",
+          desc: "Full-stack network monitoring: active ICMP/HTTP probes, Supabase persistence, and Streamlit dashboard.",
+          img: "/networkprobe.png",
+          href: "https://github.com/gitsish/network-probe--api",
+        },
+        {
+          title: "PVPSIT-College Management System Website",
+          desc: "Full-stack web app to manage students, faculty, courses, and exams with secure authentication and role-based dashboards.",
+          img: "/collegemanagementsystemimage.png",
+          href: " https://pvpsit-project-2025.onrender.com",
+        },
+        {
+          title: "Brain Tumor Classification (Colab)",
+          desc: "Deep learning CNN model on MRI scans, deployed in Google Colab, achieving high accuracy in classifying tumor types.",
+          img: "/braintumorimage.png",
+          href: "https://github.com/gitsish/BrainTumorClassification-ADeepLearningProject",
+        },
       ].map((p) => (
         <a key={p.title} href={p.href} target={p.href.startsWith("http")?"_blank":"_self"} rel="noreferrer" className="group rounded-2xl border overflow-hidden hover:shadow-lg transition">
           <div className="aspect-[16/10] overflow-hidden">
@@ -305,7 +312,7 @@ const Contact = () => (
   <AnimatedSection id="contact">
     <div className="rounded-3xl border border-white/15 p-6 lg:p-10 bg-white/10 backdrop-blur-md">
       <h2 className="text-2xl sm:text-3xl font-bold">Let’s Talk</h2>
-      <p className="bg-white/10 ">Open to full‑time Frontend / Java roles. Based in India (IST).</p>
+      <p className="bg-white/10 ">Open to full-time Frontend / Java roles. Based in India (IST).</p>
       <div className="mt-4 flex flex-wrap gap-3">
         <a href="mailto:gaaisha05@gmail.com" className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-medium shadow">Email</a>
         <a href="https://www.linkedin.com/in/aaisha-sultana-guduru-877b21302" target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-xl border font-medium">LinkedIn</a>
