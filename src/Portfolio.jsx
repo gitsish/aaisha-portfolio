@@ -472,28 +472,186 @@ const Projects = () => (
   </AnimatedSection>
 );
 
-//--- Experience / Timeline ---
-const Experience = () => (
-  <AnimatedSection id="experience">
-    <h2 className="text-2xl sm:text-3xl font-bold">Experience & Highlights</h2>
-    <div className="mt-6 relative before:absolute before:left-4 before:top-0 before:bottom-0 before:w-0.5 before:bg-neutral-200  bg-white/10 dark:before:bg-neutral-800">
-      {[
-        { time: "Aug 2025", title: "Cognizant Digital Nurture 4.0", text: "Selected and have undergone intensive training in Java, DSA, and full-stack skills with industry projects." },
-        { time: "Jul 2025", title: "EcoRouteAI — Sparkathon", text: "Built reinforcement learning baseline with visual analytics and demo pipeline." },
-        { time: "May 2025", title: "AAISearch v1", text: "Developed end-to-end search engine with inverted index and TF-IDF ranking." },
-        { time: "Apr 2025", title: "Brain Tumor Classification", text: "Created CNN-based deep learning model for MRI scan classification with high accuracy." },
-        { time: "Mar 2025", title: "College Management System", text: "Built MERN stack app with secure role-based login and responsive dashboards." },
-      ].map((e,i)=> (
-        <div key={i} className="pl-12 py-4 relative">
-          <div className="absolute left-[14px] mt-2 h-3 w-3 rounded-full bg-indigo-800 " />
-          <p className=" bg-white/10">{e.time}</p>
-          <p className="font-semibold bg-white/10">{e.title}</p>
-          <p className="text-sm bg-white/10">{e.text}</p>
+/* -----------------------------
+   Updated Experience (toggle + awards + cert carousel)
+   Replace the previous Experience component with this block
+   ----------------------------- */
+import { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+
+const CERTIFICATES = [
+  { src: "nptel.png", alt: "NPTEL Discipline Star Award" },
+  { src: "flipkart.png", alt: "Flipkart Semifinalist" },
+  { src: "walmart.png", alt: "Walmart Sparkathon — Participation / Prize" },
+  { src: "vrsec.png", alt: "VRSEC Coding Competition — 2nd Prize" },
+  // add more certificate images here
+];
+
+const Experience = () => {
+  const [open, setOpen] = useState(true);
+
+  // Carousel state
+  const [index, setIndex] = useState(0);
+  const autoplayRef = useRef(null);
+
+  useEffect(() => {
+    // Auto-advance every 4.5s
+    autoplayRef.current = setInterval(() => {
+      setIndex((i) => (i + 1) % CERTIFICATES.length);
+    }, 4500);
+    return () => clearInterval(autoplayRef.current);
+  }, []);
+
+  const prev = () => {
+    setIndex((i) => (i - 1 + CERTIFICATES.length) % CERTIFICATES.length);
+    resetAutoplay();
+  };
+  const next = () => {
+    setIndex((i) => (i + 1) % CERTIFICATES.length);
+    resetAutoplay();
+  };
+  const goto = (i) => {
+    setIndex(i);
+    resetAutoplay();
+  };
+  const resetAutoplay = () => {
+    clearInterval(autoplayRef.current);
+    autoplayRef.current = setInterval(() => {
+      setIndex((i) => (i + 1) % CERTIFICATES.length);
+    }, 4500);
+  };
+
+  const timeline = [
+    { time: "Aug 2025", title: "Cognizant Digital Nurture 4.0", text: "Selected and have undergone intensive training in Java, DSA, and full-stack skills with industry projects." },
+    { time: "Jul 2025", title: "EcoRouteAI — Sparkathon", text: "Built reinforcement learning baseline with visual analytics and demo pipeline. (Walmart Sparkathon participation / recognition)" },
+    { time: "May 2025", title: "Flipkart Hackathon — Semifinalist", text: "Reached the semifinals for building an intelligent retail/fulfillment solution under timeboxed constraints." },
+    { time: "Apr 2025", title: "VR Design Challenge — 2nd Prize", text: "Awarded 2nd prize for an immersive VR simulation project demonstrating interactive UX and optimization." },
+    { time: "Mar 2025", title: "NPTEL — Discipline Star Award", text: "Awarded NPTEL Discipline Star for outstanding performance across multiple online courses." },
+    { time: "Mar 2025", title: "Brain Tumor Classification", text: "Created CNN-based deep learning model for MRI scan classification with high accuracy." },
+    { time: "Mar 2025", title: "College Management System", text: "Built MERN stack app with secure role-based login and responsive dashboards." },
+  ];
+
+  return (
+    <section id="experience" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <h2 className="text-2xl sm:text-3xl font-bold">Experience & Awards</h2>
+          <p className="text-sm text-neutral-400 mt-1">Major milestones, hackathon recognition and awards.</p>
         </div>
-      ))}
-    </div>
-  </AnimatedSection>
-);
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setOpen((o) => !o)}
+            className="px-4 py-2 rounded-lg border hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            aria-expanded={open}
+            aria-controls="experience-details"
+          >
+            {open ? "Hide" : "Show"}
+          </button>
+        </div>
+      </div>
+
+      <motion.div
+        id="experience-details"
+        initial={{ height: 0, opacity: 0 }}
+        animate={open ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+        transition={{ duration: 0.45 }}
+        className="overflow-hidden mt-6"
+      >
+        {/* Timeline */}
+        <div className="relative before:absolute before:left-4 before:top-0 before:bottom-0 before:w-0.5 before:bg-neutral-200 dark:before:bg-neutral-800">
+          {timeline.map((e, i) => (
+            <div key={i} className="pl-12 py-4 relative">
+              <div className="absolute left-[14px] mt-2 h-3 w-3 rounded-full bg-indigo-800 dark:bg-indigo-400" />
+              <p className="text-xs text-neutral-400">{e.time}</p>
+              <p className="font-semibold mt-1">{e.title}</p>
+              <p className="text-sm text-neutral-300 mt-1">{e.text}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Awards summary */}
+        <div className="mt-6 grid sm:grid-cols-2 gap-4">
+          <div className="rounded-2xl border p-4">
+            <p className="font-semibold">Highlighted Awards</p>
+            <ul className="list-disc pl-5 mt-2 text-sm">
+              <li><strong>NPTEL Discipline Star</strong> — National recognition and Awarded Discipline Star Award for top performance across multiple NPTEL online courses.</li>
+              <li><strong>Flipkart Hackathon — Semifinalist</strong> — Reached top teams (semifinals) with strong coding skills.</li>
+              <li><strong>Walmart Sparkathon</strong> — Participated and showcased EcoRouteAI RL baseline; recognized among top submissions.</li>
+              <li><strong>VRSEC National TechFest Coding Competition — 2nd Prize</strong> — Top Coder In Competitive Porgramming Competition</li>
+            </ul>
+          </div>
+
+          <div className="rounded-2xl border p-4">
+            <p className="font-semibold">Impact & Notes</p>
+            <ul className="list-disc pl-5 mt-2 text-sm">
+              <li>Consistent focus on practical, deployable projects: monitoring systems, ML models, and optimization pipelines.</li>
+              <li>Hackathon experience under tight timelines, with prototype-level deliverables and demos.</li>
+              <li>Awards and recognitions reflect both technical depth and product thinking.</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Certificate carousel */}
+        <div className="mt-8">
+          <h3 className="font-semibold mb-3">Certificates & Photos</h3>
+          <div className="relative">
+            {/* Carousel viewport */}
+            <div className="overflow-hidden rounded-2xl border bg-black/10">
+              <div className="relative w-full h-[320px] flex items-center justify-center">
+                {CERTIFICATES.map((c, i) => (
+                  <motion.img
+                    key={c.src}
+                    src={c.src}
+                    alt={c.alt}
+                    role="img"
+                    aria-hidden={i !== index}
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={i === index ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute max-h-[86%] max-w-[92%] object-contain"
+                    style={{ pointerEvents: i === index ? "auto" : "none" }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Prev / Next */}
+            <button
+              onClick={prev}
+              aria-label="Previous certificate"
+              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 shadow hover:bg-white/20 focus:outline-none"
+            >
+              ‹
+            </button>
+            <button
+              onClick={next}
+              aria-label="Next certificate"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 shadow hover:bg-white/20 focus:outline-none"
+            >
+              ›
+            </button>
+
+            {/* Dots / thumbnails */}
+            <div className="mt-4 flex items-center justify-center gap-2">
+              {CERTIFICATES.map((c, i) => (
+                <button
+                  key={c.src}
+                  onClick={() => goto(i)}
+                  className={`w-10 h-10 rounded overflow-hidden border ${i === index ? "ring-2 ring-indigo-500" : ""}`}
+                  aria-label={`View ${c.alt}`}
+                >
+                  <img src={c.src} alt={c.alt} className="w-full h-full object-cover"/>
+                </button>
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-neutral-400 text-center">Use ← → arrows, dots, or thumbnails to navigate. Autoplay enabled.</p>
+          </div>
+        </div>
+      </motion.div>
+    </section>
+  );
+};
 
 // --- Contact ---
 const Contact = () => (
