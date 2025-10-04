@@ -435,7 +435,7 @@ const Bubble = ({ label, index }) => {
   );
 };
 
-function SkillsFloating({ height = 900 }) {
+function SkillsFloating({ height = 1800 }) {
  const centers = [
   { left: "20%", top: "25%" },
   { left: "50%", top: "20%" },
