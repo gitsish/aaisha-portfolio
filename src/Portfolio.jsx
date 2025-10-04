@@ -1,3 +1,4 @@
+// Portfolio.jsx
 import { useEffect } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { ReactTyped } from "react-typed";
@@ -231,7 +232,190 @@ const NetworkingSkills = () => (
   </AnimatedSection>
 );
 
-// --- Projects Grid ---
+/* -----------------------------
+   New: SkillsFloating Component
+   -----------------------------
+   - Animated floating bubbles using framer-motion
+   - Keyboard accessible (Enter/Space activates bubble)
+   - Clusters for Software Dev, Cloud, AI/ML, DSA
+*/
+const SKILL_GROUPS = [
+  {
+    title: "Software Development",
+    skills: ["JavaScript", "TypeScript", "React", "Node.js", "Express", "Postgres"],
+  },
+  {
+    title: "Cloud & Networking",
+    skills: ["AWS", "GCP", "VPC", "Subnetting", "VPN", "Load Balancing"],
+  },
+  {
+    title: "AI / ML",
+    skills: ["PyTorch", "TensorFlow", "Hugging Face", "MLOps", "Data Pipelines"],
+  },
+  {
+    title: "DSA",
+    skills: ["Arrays", "Graphs", "DP", "Greedy", "Trees", "Heaps"],
+  },
+];
+
+const generateFloatProps = (index) => {
+  const delayBase = (index % 6) * 0.12;
+  const size = 0.9 + ((index % 5) * 0.12);
+  const xRange = [-28, 28];
+  const yRange = [-14, 14];
+
+  return {
+    initial: { x: 0, y: 0, scale: 0.97 },
+    animate: {
+      x: [
+        xRange[0] * (Math.random() * 1.15),
+        xRange[1] * (Math.random() * 1.15),
+        xRange[0] * (Math.random() * 1.15),
+      ],
+      y: [
+        yRange[0] * (Math.random() * 1.15),
+        yRange[1] * (Math.random() * 1.15),
+        yRange[0] * (Math.random() * 1.15),
+      ],
+      scale: [0.97, 1.03, 0.99],
+      rotate: [-3, 3, -2],
+    },
+    transition: {
+      duration: 8 + Math.random() * 6,
+      repeat: Infinity,
+      repeatType: "mirror",
+      ease: "easeInOut",
+      delay: delayBase,
+    },
+    styleScale: size,
+  };
+};
+
+const Bubble = ({ label, index }) => {
+  const props = generateFloatProps(index);
+
+  const onActivate = () => {
+    // simple activation: log / future hook for modal or filtering
+    // Replace with modal or link as needed
+    if (typeof window !== "undefined") {
+      // small visual feedback for users
+      // you can swap this for any action like open a modal or filter projects
+      // eslint-disable-next-line no-console
+      console.log("Activated skill:", label);
+    }
+  };
+
+  const onKey = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onActivate();
+    }
+  };
+
+  return (
+    <motion.button
+      aria-label={`Skill: ${label}`}
+      className="absolute flex items-center justify-center rounded-full border bg-white/40 backdrop-blur-md px-4 py-2 text-sm font-medium shadow-lg select-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      initial={props.initial}
+      animate={props.animate}
+      transition={props.transition}
+      whileHover={{ scale: 1.08, zIndex: 20 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onActivate}
+      onKeyDown={onKey}
+      style={{
+        transform: `translate(-50%, -50%) scale(${props.styleScale})`,
+      }}
+      tabIndex={0}
+      type="button"
+    >
+      {label}
+    </motion.button>
+  );
+};
+
+function SkillsFloating({ height = 420 }) {
+  const centers = [
+    { left: "20%", top: "30%" },
+    { left: "75%", top: "28%" },
+    { left: "20%", top: "72%" },
+    { left: "75%", top: "70%" },
+  ];
+
+  return (
+    <section id="skills-floating" className="relative w-full">
+      <div className="mx-auto px-4" style={{ maxWidth: "1200px" }}>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold">Highlighted Skills</h2>
+            <p className="text-sm mt-1 text-muted-foreground">Interactive floating skill clusters — click / hover to focus.</p>
+          </div>
+          <div className="hidden sm:block">
+            <span className="text-xs text-gray-500">Hover bubbles for emphasis</span>
+          </div>
+        </div>
+
+        <div
+          className="relative mt-6 rounded-2xl border border-gray-200/40 bg-gradient-to-b from-white/40 to-white/10 overflow-hidden"
+          style={{ width: "100%", height }}
+        >
+          {/* soft background circles for depth */}
+          <div className="absolute inset-0 pointer-events-none">
+            <motion.div
+              className="absolute rounded-full opacity-30"
+              style={{ width: 380, height: 380, background: "linear-gradient(135deg,#a78bfa, #60a5fa)", left: -60, top: -60 }}
+              animate={{ scale: [1, 1.04, 1] }}
+              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="absolute rounded-full opacity-20"
+              style={{ width: 260, height: 260, background: "linear-gradient(135deg,#34d399,#60a5fa)", right: -80, bottom: -40 }}
+              animate={{ scale: [1, 1.06, 1] }}
+              transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </div>
+
+          {/* clusters */}
+          {SKILL_GROUPS.map((group, gi) => (
+            <div key={group.title} className="absolute" style={{ left: centers[gi].left, top: centers[gi].top, transform: "translate(-50%, -50%)" }}>
+              <div className="relative w-[300px] h-[160px]">
+                {/* title pill */}
+                <motion.div
+                  initial={{ y: -8, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.15 * gi, duration: 0.5 }}
+                  className="absolute -top-6 left-1/2 -translate-x-1/2 bg-white/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold shadow"
+                >
+                  {group.title}
+                </motion.div>
+
+                {/* skill bubbles positioned in a loose circle */}
+                {group.skills.map((s, i) => {
+                  const angle = (i / group.skills.length) * Math.PI * 2;
+                  const radius = 48 + (i % 3) * 18;
+                  const left = 50 + Math.round(Math.cos(angle) * radius);
+                  const top = 50 + Math.round(Math.sin(angle) * radius);
+
+                  return (
+                    <div key={s} style={{ left: `${left}%`, top: `${top}%`, position: "absolute" }}>
+                      <Bubble label={s} index={gi * 10 + i} />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <p className="sr-only">This section shows clusters of skills as animated floating bubbles. Use keyboard to focus and Enter to interact.</p>
+      </div>
+    </section>
+  );
+}
+
+/* -----------------------------
+   Projects Grid
+   ----------------------------- */
 const Projects = () => (
   <AnimatedSection id="projects">
     <h2 className="text-2xl sm:text-3xl font-bold">Selected Projects</h2>
@@ -335,6 +519,10 @@ export default function EnhancedPortfolio() {
       <Hero />
       <NetworkMonitor />
       <NetworkingSkills />
+
+      {/* <-- Floating skill clusters inserted here --> */}
+      <SkillsFloating height={420} />
+
       <Projects />
       <Experience />
       <Contact />
