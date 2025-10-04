@@ -1,7 +1,7 @@
 // Portfolio.jsx
-import { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { ReactTyped } from "react-typed";
+import Typed from "react-typed";
 
 // --- Simple smooth-scroll helper ---
 const scrollToId = (id) => {
@@ -81,21 +81,21 @@ const Hero = () => (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 grid md:grid-cols-2 gap-10 items-center">
       <div>
         <h1 className="text-3xl sm:text-5xl font-extrabold leading-tight">
-  <ReactTyped
-    strings={[
-      "Software Engineer",
-      "Cloud Network Engineer",
-      "Frontend Engineer",
-      "Java Developer",
-      "Data Science Student",
-      "ML Enthusiast"
-    ]}
-    typeSpeed={70}
-    backSpeed={40}
-    backDelay={900}
-    loop
-  />
-</h1>
+          <Typed
+            strings={[
+              "Software Engineer",
+              "Cloud Network Engineer",
+              "Frontend Engineer",
+              "Java Developer",
+              "Data Science Student",
+              "ML Enthusiast",
+            ]}
+            typeSpeed={70}
+            backSpeed={40}
+            backDelay={900}
+            loop
+          />
+        </h1>
 
         <motion.p
           initial={{ opacity: 0, y: 12 }}
@@ -106,15 +106,31 @@ const Hero = () => (
           I build resilient cloud & network systems, fast accessible UIs and scalable Java backends. Explore the Network Monitor Dashboard case study and other projects below.
         </motion.p>
         <div className="mt-6 flex gap-3">
-          <a href="#networkmonitor" onClick={(e)=>{e.preventDefault();scrollToId('networkmonitor')}} className="px-5 py-2.5 rounded-xl bg-indigo-600 font-medium shadow">
+          <a
+            href="#networkmonitor"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToId("networkmonitor");
+            }}
+            className="px-5 py-2.5 rounded-xl bg-indigo-600 font-medium shadow"
+          >
             See Network Monitor Case Study
           </a>
-          <a href="#projects" onClick={(e)=>{e.preventDefault();scrollToId('projects')}} className="px-5 py-2.5 rounded-xl border font-medium">
+          <a
+            href="#projects"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToId("projects");
+            }}
+            className="px-5 py-2.5 rounded-xl border font-medium"
+          >
             All Projects
           </a>
         </div>
         <div className="mt-6 flex flex-wrap gap-2">
-          {["Cloud","Networking","React","Vite","Tailwind","Framer Motion","Java","DSA"].map(t=> <Chip key={t}>{t}</Chip>)}
+          {["Cloud", "Networking", "React", "Vite", "Tailwind", "Framer Motion", "Java", "DSA"].map((t) => (
+            <Chip key={t}>{t}</Chip>
+          ))}
         </div>
       </div>
       <motion.div
@@ -124,30 +140,34 @@ const Hero = () => (
         className="relative"
       >
         {/* Replace src with your hero image */}
-        <img
-          src="/portfolioimage.png"
-          alt="Aaisha Sultana — Cloud & Network Engineer"
-          className="rounded-3xl shadow-2xl w-full object-contain"
-        />
-        
+        <img src="/portfolioimage.png" alt="Aaisha Sultana — Cloud & Network Engineer" className="rounded-3xl shadow-2xl w-full object-contain" />
       </motion.div>
     </div>
   </section>
 );
 
-// --- Network Monitor Case Study (replaces AAISearch highlighted project) ---
+// --- Network Monitor Case Study ---
 const NetworkMonitor = () => (
   <AnimatedSection id="networkmonitor">
     <div className="flex items-center justify-between gap-6 flex-wrap">
       <h2 className="text-2xl sm:text-3xl font-bold">Network Monitor Dashboard — Case Study</h2>
       <div className="flex gap-2">
-        <a href="https://github.com/gitsish/network-probe--api/blob/main/README.md" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg border font-medium">GitHub</a>
-        <a href="https://github.com/gitsish/NetworkMonitor/blob/main/README.m" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-medium">Project</a>
+        <a href="https://github.com/gitsish/network-probe--api/blob/main/README.md" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg border font-medium">
+          GitHub
+        </a>
+        <a
+          href="https://github.com/gitsish/NetworkMonitor/blob/main/README.m"
+          target="_blank"
+          rel="noreferrer"
+          className="px-4 py-2 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-medium"
+        >
+          Project
+        </a>
       </div>
     </div>
 
     <p className="text-neutral-600 dark:text-neutral-300">
-      A  network monitoring dashboard: active ICMP & HTTP probes, persistence in Supabase, historical playback and a Streamlit dashboard with optional globe visualization.
+      A network monitoring dashboard: active ICMP & HTTP probes, persistence in Supabase, historical playback and a Streamlit dashboard with optional globe visualization.
     </p>
 
     <div className="grid md:grid-cols-2 gap-6 mt-6">
@@ -175,9 +195,10 @@ const NetworkMonitor = () => (
     </div>
 
     <div className="mt-6 grid md:grid-cols-3 gap-4">
-      {["Python","Streamlit","Supabase","ICMP","HTTP Probing","Railway","Prometheus (optional)"].map(t => (
+      {["Python", "Streamlit", "Supabase", "ICMP", "HTTP Probing", "Railway", "Prometheus (optional)"].map((t) => (
         <div key={t} className="rounded-xl border p-3 text-sm flex items-center justify-between">
-          <span>{t}</span><span className="text-xs text-neutral-500">tool</span>
+          <span>{t}</span>
+          <span className="text-xs text-neutral-500">tool</span>
         </div>
       ))}
     </div>
@@ -193,7 +214,7 @@ const NetworkMonitor = () => (
   </AnimatedSection>
 );
 
-// --- Networking Skills (replaces JavaSkills) ---
+// --- Networking Skills ---
 const NetworkingSkills = () => (
   <AnimatedSection id="networking">
     <h2 className="text-2xl sm:text-3xl font-bold">Cloud & Networking — Core Skills</h2>
@@ -233,12 +254,8 @@ const NetworkingSkills = () => (
 );
 
 /* -----------------------------
-   New: SkillsFloating Component
-   -----------------------------
-   - Animated floating bubbles using framer-motion
-   - Keyboard accessible (Enter/Space activates bubble)
-   - Clusters for Software Dev, Cloud, AI/ML, DSA
-*/
+   SkillsFloating Component
+   ----------------------------- */
 const SKILL_GROUPS = [
   {
     title: "Software Development",
@@ -260,23 +277,15 @@ const SKILL_GROUPS = [
 
 const generateFloatProps = (index) => {
   const delayBase = (index % 6) * 0.12;
-  const size = 0.9 + ((index % 5) * 0.12);
+  const size = 0.9 + (index % 5) * 0.12;
   const xRange = [-28, 28];
   const yRange = [-14, 14];
 
   return {
     initial: { x: 0, y: 0, scale: 0.97 },
     animate: {
-      x: [
-        xRange[0] * (Math.random() * 1.15),
-        xRange[1] * (Math.random() * 1.15),
-        xRange[0] * (Math.random() * 1.15),
-      ],
-      y: [
-        yRange[0] * (Math.random() * 1.15),
-        yRange[1] * (Math.random() * 1.15),
-        yRange[0] * (Math.random() * 1.15),
-      ],
+      x: [xRange[0] * (Math.random() * 1.15), xRange[1] * (Math.random() * 1.15), xRange[0] * (Math.random() * 1.15)],
+      y: [yRange[0] * (Math.random() * 1.15), yRange[1] * (Math.random() * 1.15), yRange[0] * (Math.random() * 1.15)],
       scale: [0.97, 1.03, 0.99],
       rotate: [-3, 3, -2],
     },
@@ -295,12 +304,7 @@ const Bubble = ({ label, index }) => {
   const props = generateFloatProps(index);
 
   const onActivate = () => {
-    // simple activation: log / future hook for modal or filtering
-    // Replace with modal or link as needed
     if (typeof window !== "undefined") {
-      // small visual feedback for users
-      // you can swap this for any action like open a modal or filter projects
-      // eslint-disable-next-line no-console
       console.log("Activated skill:", label);
     }
   };
@@ -355,41 +359,19 @@ function SkillsFloating({ height = 420 }) {
           </div>
         </div>
 
-        <div
-          className="relative mt-6 rounded-2xl border border-gray-200/40 bg-gradient-to-b from-white/40 to-white/10 overflow-hidden"
-          style={{ width: "100%", height }}
-        >
-          {/* soft background circles for depth */}
+        <div className="relative mt-6 rounded-2xl border border-gray-200/40 bg-gradient-to-b from-white/40 to-white/10 overflow-hidden" style={{ width: "100%", height }}>
           <div className="absolute inset-0 pointer-events-none">
-            <motion.div
-              className="absolute rounded-full opacity-30"
-              style={{ width: 380, height: 380, background: "linear-gradient(135deg,#a78bfa, #60a5fa)", left: -60, top: -60 }}
-              animate={{ scale: [1, 1.04, 1] }}
-              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute rounded-full opacity-20"
-              style={{ width: 260, height: 260, background: "linear-gradient(135deg,#34d399,#60a5fa)", right: -80, bottom: -40 }}
-              animate={{ scale: [1, 1.06, 1] }}
-              transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-            />
+            <motion.div className="absolute rounded-full opacity-30" style={{ width: 380, height: 380, background: "linear-gradient(135deg,#a78bfa, #60a5fa)", left: -60, top: -60 }} animate={{ scale: [1, 1.04, 1] }} transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }} />
+            <motion.div className="absolute rounded-full opacity-20" style={{ width: 260, height: 260, background: "linear-gradient(135deg,#34d399,#60a5fa)", right: -80, bottom: -40 }} animate={{ scale: [1, 1.06, 1] }} transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }} />
           </div>
 
-          {/* clusters */}
           {SKILL_GROUPS.map((group, gi) => (
             <div key={group.title} className="absolute" style={{ left: centers[gi].left, top: centers[gi].top, transform: "translate(-50%, -50%)" }}>
               <div className="relative w-[300px] h-[160px]">
-                {/* title pill */}
-                <motion.div
-                  initial={{ y: -8, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.15 * gi, duration: 0.5 }}
-                  className="absolute -top-6 left-1/2 -translate-x-1/2 bg-white/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold shadow"
-                >
+                <motion.div initial={{ y: -8, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.15 * gi, duration: 0.5 }} className="absolute -top-6 left-1/2 -translate-x-1/2 bg-white/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold shadow">
                   {group.title}
                 </motion.div>
 
-                {/* skill bubbles positioned in a loose circle */}
                 {group.skills.map((s, i) => {
                   const angle = (i / group.skills.length) * Math.PI * 2;
                   const radius = 48 + (i % 3) * 18;
@@ -458,9 +440,9 @@ const Projects = () => (
           href: "https://github.com/gitsish/BrainTumorClassification-ADeepLearningProject",
         },
       ].map((p) => (
-        <a key={p.title} href={p.href} target={p.href.startsWith("http")?"_blank":"_self"} rel="noreferrer" className="group rounded-2xl border overflow-hidden hover:shadow-lg transition">
+        <a key={p.title} href={p.href} target={p.href.startsWith("http") ? "_blank" : "_self"} rel="noreferrer" className="group rounded-2xl border overflow-hidden hover:shadow-lg transition">
           <div className="aspect-[16/10] overflow-hidden">
-            <img src={p.img} alt={p.title} className="w-full h-full object-cover group-hover:scale-[1.03] transition"/>
+            <img src={p.img} alt={p.title} className="w-full h-full object-cover group-hover:scale-[1.03] transition" />
           </div>
           <div className="p-4">
             <p className="font-semibold">{p.title}</p>
@@ -474,17 +456,13 @@ const Projects = () => (
 
 /* -----------------------------
    Updated Experience (toggle + awards + cert carousel)
-   Replace the previous Experience component with this block
    ----------------------------- */
-import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-
 const CERTIFICATES = [
-  { src: "nptel.png", alt: "NPTEL Discipline Star Award" },
-  { src: "flipkart.png", alt: "Flipkart Semifinalist" },
-  { src: "walmart.png", alt: "Walmart Sparkathon — Participation / Prize" },
-  { src: "vrsec.png", alt: "VRSEC Coding Competition — 2nd Prize" },
-   { src: "aiforgood.png", alt: "NIAT AIFORGOOD HACKATHON FINALIST" },
+  { src: "/certs/nptel.png", alt: "NPTEL Discipline Star Award" },
+  { src: "/certs/flipkart.png", alt: "Flipkart Semifinalist" },
+  { src: "/certs/walmart.png", alt: "Walmart Sparkathon — Participation / Prize" },
+  { src: "/certs/vrsec.png", alt: "VRSEC Coding Competition — 2nd Prize" },
+  { src: "/certs/aiforgood.png", alt: "NIAT AIFORGOOD HACKATHON FINALIST" },
   // add more certificate images here
 ];
 
@@ -552,13 +530,7 @@ const Experience = () => {
         </div>
       </div>
 
-      <motion.div
-        id="experience-details"
-        initial={{ height: 0, opacity: 0 }}
-        animate={open ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
-        transition={{ duration: 0.45 }}
-        className="overflow-hidden mt-6"
-      >
+      <motion.div id="experience-details" initial={{ height: 0, opacity: 0 }} animate={open ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }} transition={{ duration: 0.45 }} className="overflow-hidden mt-6">
         {/* Timeline */}
         <div className="relative before:absolute before:left-4 before:top-0 before:bottom-0 before:w-0.5 before:bg-neutral-200 dark:before:bg-neutral-800">
           {timeline.map((e, i) => (
@@ -576,10 +548,18 @@ const Experience = () => {
           <div className="rounded-2xl border p-4">
             <p className="font-semibold">Highlighted Awards</p>
             <ul className="list-disc pl-5 mt-2 text-sm">
-              <li><strong>NPTEL Discipline Star</strong> — National recognition and Awarded Discipline Star Award for top performance across multiple NPTEL online courses.</li>
-              <li><strong>Flipkart Hackathon — Semifinalist</strong> — Reached top teams (semifinals) with strong coding skills.</li>
-              <li><strong>Walmart Sparkathon</strong> — Participated and showcased EcoRouteAI RL baseline; recognized among top submissions.</li>
-              <li><strong>VRSEC National TechFest Coding Competition — 2nd Prize</strong> — Top Coder In Competitive Porgramming Competition</li>
+              <li>
+                <strong>NPTEL Discipline Star</strong> — National recognition; awarded for top performance across multiple NPTEL online courses.
+              </li>
+              <li>
+                <strong>Flipkart Hackathon — Semifinalist</strong> — Reached top teams (semifinals) for an intelligent retail/fulfillment prototype.
+              </li>
+              <li>
+                <strong>Walmart Sparkathon</strong> — Participated and showcased EcoRouteAI RL baseline; received recognition among top submissions.
+              </li>
+              <li>
+                <strong>VRSEC National TechFest — 2nd Prize</strong> — Awarded second place for an immersive VR simulation & optimization project.
+              </li>
             </ul>
           </div>
 
@@ -618,31 +598,18 @@ const Experience = () => {
             </div>
 
             {/* Prev / Next */}
-            <button
-              onClick={prev}
-              aria-label="Previous certificate"
-              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 shadow hover:bg-white/20 focus:outline-none"
-            >
+            <button onClick={prev} aria-label="Previous certificate" className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 shadow hover:bg-white/20 focus:outline-none">
               ‹
             </button>
-            <button
-              onClick={next}
-              aria-label="Next certificate"
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 shadow hover:bg-white/20 focus:outline-none"
-            >
+            <button onClick={next} aria-label="Next certificate" className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 shadow hover:bg-white/20 focus:outline-none">
               ›
             </button>
 
             {/* Dots / thumbnails */}
             <div className="mt-4 flex items-center justify-center gap-2">
               {CERTIFICATES.map((c, i) => (
-                <button
-                  key={c.src}
-                  onClick={() => goto(i)}
-                  className={`w-10 h-10 rounded overflow-hidden border ${i === index ? "ring-2 ring-indigo-500" : ""}`}
-                  aria-label={`View ${c.alt}`}
-                >
-                  <img src={c.src} alt={c.alt} className="w-full h-full object-cover"/>
+                <button key={c.src} onClick={() => goto(i)} className={`w-10 h-10 rounded overflow-hidden border ${i === index ? "ring-2 ring-indigo-500" : ""}`} aria-label={`View ${c.alt}`}>
+                  <img src={c.src} alt={c.alt} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
@@ -670,7 +637,9 @@ const Contact = () => (
 );
 
 export default function EnhancedPortfolio() {
-  useEffect(()=>{ document.documentElement.classList.add("scroll-smooth"); },[]);
+  useEffect(() => {
+    document.documentElement.classList.add("scroll-smooth");
+  }, []);
   return (
     <main className="min-h-screen relative text-white">
       <TopProgress />
