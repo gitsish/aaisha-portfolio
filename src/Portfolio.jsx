@@ -681,7 +681,7 @@ const Experience = () => {
 // Optional: update CERTIFICATES entries to include bg if you want image-specific backgrounds
 // Example:
 // { src: "/walmart.png", alt: "Walmart", bg: "/carousel-bg.png" }
-const DEFAULT_BG = "/carousel-bg.png";//add a generic background image here (or keep as placeholder)
+const DEFAULT_BG = "/carousel-bg.png";  //add a generic background image here (or keep as placeholder)
 
 <div className="mt-8">
   <h3 className="font-semibold mb-3">Certificates & Photos</h3>
