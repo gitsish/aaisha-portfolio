@@ -82,6 +82,7 @@ const Hero = () => (
         <h1 className="text-3xl sm:text-5xl font-extrabold leading-tight">
   <ReactTyped
     strings={[
+      "Software Engineer",
       "Cloud Network Engineer",
       "Frontend Engineer",
       "Java Developer",
@@ -315,7 +316,7 @@ const Contact = () => (
   <AnimatedSection id="contact">
     <div className="rounded-3xl border border-white/15 p-6 lg:p-10 bg-white/10 backdrop-blur-md">
       <h2 className="text-2xl sm:text-3xl font-bold">Let’s Talk</h2>
-      <p className="bg-white/10 ">Open to full-time Cloud & Network roles and Frontend/Java positions. Based in India (IST).</p>
+      <p className="bg-white/10 ">Open to full-time Software Development,Cloud & Network roles and Frontend/Java positions. Based in India (IST).</p>
       <div className="mt-4 flex flex-wrap gap-3">
         <a href="mailto:gaaisha05@gmail.com" className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-medium shadow">Email</a>
         <a href="https://www.linkedin.com/in/aaisha-sultana-guduru-877b21302" target="_blank" rel="noreferrer" className="px-5 py-2.5 rounded-xl border font-medium">LinkedIn</a>
