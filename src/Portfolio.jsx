@@ -105,7 +105,7 @@ const Nav = () => (
           ["AAISearch", "aaisearch"],
           ["Cloud & Networking", "networking"],
           ["Experience", "experience"],
-           ["Certifications", "Certifications"],
+           ["Certifications", "experience"],
           ["Contact", "contact"],
         ].map(([label, id]) => (
           <button
