@@ -673,54 +673,96 @@ const Experience = () => {
             </ul>
           </div>
         </div>
+/* -----------------------------
+   Certificate carousel (replacement)
+   Renders one slide at a time with a background filler
+   ----------------------------- */
 
-        {/* Certificate carousel */}
-        <div className="mt-8">
-          <h3 className="font-semibold mb-3">Certificates & Photos</h3>
-          <div className="relative">
-            {/* Carousel viewport */}
-            <div className="overflow-hidden rounded-2xl border bg-black/10">
-              <div className="relative w-full h-[320px] flex items-center justify-center">
-                {CERTIFICATES.map((c, i) => (
-                  <motion.img
-                    key={c.src}
-                    src={c.src}
-                    alt={c.alt}
-                    role="img"
-                    aria-hidden={i !== index}
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={i === index ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
-                    transition={{ duration: 0.5 }}
-                    className="absolute max-h-[86%] max-w-[92%] object-contain"
-                    style={{ pointerEvents: i === index ? "auto" : "none" }}
-                  />
-                ))}
-              </div>
-            </div>
+// Optional: update CERTIFICATES entries to include bg if you want image-specific backgrounds
+// Example:
+// { src: "/certs/walmart.png", alt: "Walmart", bg: "/certs/walmart-bg.png" }
+const DEFAULT_BG = "/certs/carousel-bg.png"; // add a generic background image here (or keep as placeholder)
 
-            {/* Prev / Next */}
-            <button onClick={prev} aria-label="Previous certificate" className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 shadow hover:bg-white/20 focus:outline-none">
-              ‹
-            </button>
-            <button onClick={next} aria-label="Next certificate" className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 shadow hover:bg-white/20 focus:outline-none">
-              ›
-            </button>
+<div className="mt-8">
+  <h3 className="font-semibold mb-3">Certificates & Photos</h3>
+  <div className="relative">
+    {/* Carousel viewport */}
+    <div className="overflow-hidden rounded-2xl border bg-black/10">
+      <div className="relative w-full h-[360px] flex items-center justify-center">
+        {/* Active slide container (fills entire viewport with bg filler) */}
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.45 }}
+          className="absolute inset-0 flex items-center justify-center"
+          style={{
+            // prefer per-image bg if provided, otherwise default bg. If neither exists, fallback to gradient.
+            backgroundImage: `url("${CERTIFICATES[index]?.bg || DEFAULT_BG}")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          {/* subtle overlay to improve contrast over background */}
+          <div className="absolute inset-0 bg-black/20" />
 
-            {/* Dots / thumbnails */}
-            <div className="mt-4 flex items-center justify-center gap-2">
-              {CERTIFICATES.map((c, i) => (
-                <button key={c.src} onClick={() => goto(i)} className={`w-10 h-10 rounded overflow-hidden border ${i === index ? "ring-2 ring-indigo-500" : ""}`} aria-label={`View ${c.alt}`}>
-                  <img src={c.src} alt={c.alt} className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
-            <p className="mt-2 text-xs text-neutral-400 text-center">Use ← → arrows, dots, or thumbnails to navigate. Autoplay enabled.</p>
-          </div>
-        </div>
-      </motion.div>
-    </section>
-  );
-};
+          {/* The certificate/photo itself sits above the background; object-contain keeps aspect ratio */}
+          <img
+            src={CERTIFICATES[index].src}
+            alt={CERTIFICATES[index].alt}
+            className="relative z-10 max-h-[88%] max-w-[92%] object-contain shadow-lg rounded"
+            draggable={false}
+          />
+        </motion.div>
+
+        {/* If you want a pure gradient fallback when no bg image is available, add this behind motion.div */}
+        {!CERTIFICATES[index]?.bg && (
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(99,102,241,0.12), rgba(236,72,153,0.08))",
+            }}
+          />
+        )}
+      </div>
+    </div>
+
+    {/* Prev / Next */}
+    <button
+      onClick={prev}
+      aria-label="Previous certificate"
+      className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 shadow hover:bg-white/20 focus:outline-none"
+    >
+      ‹
+    </button>
+    <button
+      onClick={next}
+      aria-label="Next certificate"
+      className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 shadow hover:bg-white/20 focus:outline-none"
+    >
+      ›
+    </button>
+
+    {/* Dots / thumbnails */}
+    <div className="mt-4 flex items-center justify-center gap-2">
+      {CERTIFICATES.map((c, i) => (
+        <button
+          key={c.src}
+          onClick={() => goto(i)}
+          className={`w-12 h-12 rounded overflow-hidden border ${i === index ? "ring-2 ring-indigo-500" : ""}`}
+          aria-label={`View ${c.alt}`}
+        >
+          <img src={c.src} alt={c.alt} className="w-full h-full object-cover" />
+        </button>
+      ))}
+    </div>
+    <p className="mt-2 text-xs text-neutral-400 text-center">Use ← → arrows, dots, or thumbnails to navigate. Autoplay enabled.</p>
+  </div>
+</div>
 
 // --- Contact ---
 const Contact = () => (
