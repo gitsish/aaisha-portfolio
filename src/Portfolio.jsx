@@ -564,7 +564,7 @@ const CERTIFICATES = [
   // add more certificate images here
 ];
 
-const DEFAULT_BG = "/carousel-bg.png"; // put carousel-bg.png in public/
+const DEFAULT_BG = "/portfolioimage.png"; // put carousel-bg.png in public/
 
 const Experience = () => {
   const [open, setOpen] = useState(true);
