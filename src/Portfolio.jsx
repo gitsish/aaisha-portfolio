@@ -307,21 +307,70 @@ const NetworkingSkills = () => (
 const SKILL_GROUPS = [
   {
     title: "Software Development",
-    skills: ["JavaScript", "TypeScript", "React", "Node.js", "Express", "Postgres"],
+    skills: ["JavaScript", "TypeScript", "React", "Node.js", "Express", "Postgres", "Next.js", "Vite", "Webpack"],
   },
   {
     title: "Cloud & Networking",
-    skills: ["AWS", "GCP", "VPC", "Subnetting", "VPN", "Load Balancing"],
+    skills: ["AWS", "GCP", "Azure", "VPC", "Subnetting", "VPN", "Load Balancing", "CloudFormation", "Terraform"],
   },
   {
     title: "AI / ML",
-    skills: ["PyTorch", "TensorFlow", "Hugging Face", "MLOps", "Data Pipelines"],
+    skills: ["PyTorch", "TensorFlow", "Hugging Face", "scikit-learn", "MLOps", "Data Pipelines", "Model Deployment"],
   },
   {
     title: "DSA",
-    skills: ["Arrays", "Graphs", "DP", "Greedy", "Trees", "Heaps"],
+    skills: ["Arrays", "Graphs", "DP", "Greedy", "Trees", "Heaps", "Two Pointers", "Sliding Window"],
+  },
+  {
+    title: "Data Engineering",
+    skills: ["ETL", "Airflow", "Kafka", "Spark", "Snowflake", "BigQuery", "Data Modeling"],
+  },
+  {
+    title: "Databases",
+    skills: ["PostgreSQL", "MySQL", "MongoDB", "Redis", "TimescaleDB", "Indexing", "Query Optimization"],
+  },
+  {
+    title: "DevOps & CI/CD",
+    skills: ["Docker", "Kubernetes", "GitHub Actions", "Jenkins", "CI/CD Pipelines", "Helm"],
+  },
+  {
+    title: "Observability",
+    skills: ["Prometheus", "Grafana", "ELK Stack", "Jaeger", "Logging", "Alerting", "SLO/SLI"],
+  },
+  {
+    title: "Security",
+    skills: ["OAuth2", "JWT", "WAF", "Firewall", "TLS/HTTPS", "Security Best Practices", "OWASP"],
+  },
+  {
+    title: "Mobile & Frontend",
+    skills: ["React Native", "Flutter", "Responsive UI", "Accessibility (a11y)", "Tailwind", "CSS-in-JS"],
+  },
+  {
+    title: "Computer Vision",
+    skills: ["OpenCV", "CNNs", "Image Augmentation", "Object Detection", "Segmentation"],
+  },
+  {
+    title: "Natural Language Processing",
+    skills: ["Transformers", "spaCy", "Text Preprocessing", "Sentiment Analysis", "Tokenization"],
+  },
+  {
+    title: "Testing & Quality",
+    skills: ["Jest", "React Testing Library", "PyTest", "Unit Tests", "Integration Tests", "E2E (Cypress)"],
+  },
+  {
+    title: "Distributed Systems",
+    skills: ["CAP Theorem", "Consensus (Raft/Paxos)", "Message Queues", "Event-driven Design"],
+  },
+  {
+    title: "Tools & Productivity",
+    skills: ["Git", "VS Code", "Postman", "Figma", "Notion", "Slack", "Linux CLI"],
+  },
+  {
+    title: "Soft Skills",
+    skills: ["System Design", "Product Thinking", "Mentoring", "Technical Writing", "Agile/Scrum"],
   },
 ];
+
 
 const generateFloatProps = (index) => {
   const delayBase = (index % 6) * 0.12;
@@ -551,8 +600,9 @@ const Experience = () => {
   const timeline = [
     { time: "Aug 2025", title: "Cognizant Digital Nurture 4.0", text: "Selected and have undergone intensive training in Java, DSA, and full-stack skills with industry projects." },
     { time: "Jul 2025", title: "EcoRouteAI — Sparkathon", text: "Built reinforcement learning baseline with visual analytics and demo pipeline. (Walmart Sparkathon participation / recognition)" },
+    { time: "May 2025", title: "AIFORGOOD NIAT Hackathon — Finalist", text: "Reached the finals for building an intelligent retail/fulfillment solution under timeboxed constraints." },
     { time: "May 2025", title: "Flipkart Hackathon — Semifinalist", text: "Reached the semifinals for building an intelligent retail/fulfillment solution under timeboxed constraints." },
-    { time: "Apr 2025", title: "VR Design Challenge — 2nd Prize", text: "Awarded 2nd prize for an immersive VR simulation project demonstrating interactive UX and optimization." },
+    { time: "Apr 2025", title: "VRSEC Coding Competition — 2nd Prize", text: "Awarded 2nd prize for an immersive VR simulation project demonstrating interactive UX and optimization." },
     { time: "Mar 2025", title: "NPTEL — Discipline Star Award", text: "Awarded NPTEL Discipline Star for outstanding performance across multiple online courses." },
     { time: "Mar 2025", title: "Brain Tumor Classification", text: "Created CNN-based deep learning model for MRI scan classification with high accuracy." },
     { time: "Mar 2025", title: "College Management System", text: "Built MERN stack app with secure role-based login and responsive dashboards." },
@@ -599,6 +649,9 @@ const Experience = () => {
               <li>
                 <strong>NPTEL Discipline Star</strong> — National recognition; awarded for top performance across multiple NPTEL online courses.
               </li>
+               <li>
+                <strong>AIFORGOOD NIAT Hackathon — Finalist</strong> — Reached top 10% teams all over India (Finals) for an intelligent Blood Warriors prototype.
+              </li>
               <li>
                 <strong>Flipkart Hackathon — Semifinalist</strong> — Reached top teams (semifinals) for an intelligent retail/fulfillment prototype.
               </li>
@@ -606,7 +659,7 @@ const Experience = () => {
                 <strong>Walmart Sparkathon</strong> — Participated and showcased EcoRouteAI RL baseline; received recognition among top submissions.
               </li>
               <li>
-                <strong>VRSEC National TechFest — 2nd Prize</strong> — Awarded second place for an immersive VR simulation & optimization project.
+                <strong>VRSEC National TechFest — 2nd Prize</strong> — Awarded Top Coder among brilliant Coders in Competitive Coding Competition.
               </li>
             </ul>
           </div>
