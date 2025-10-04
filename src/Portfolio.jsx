@@ -371,41 +371,64 @@ const SKILL_GROUPS = [
   },
 ];
 
+/* -----------------------------
+  Improved SkillsFloating - fade-in / fade-out bubbles
+  ----------------------------- */
 
 const generateFloatProps = (index) => {
-  const delayBase = (index % 6) * 0.12;
-  const size = 0.9 + (index % 5) * 0.12;
+  const delayBase = (index % 8) * 0.12;
+  const size = 0.9 + (index % 5) * 0.08;
   const xRange = [-28, 28];
   const yRange = [-14, 14];
 
+  // randomize motion to avoid perfect sync
+  const rand = (n) => Math.random() * n;
   return {
-    initial: { x: 0, y: 0, scale: 0.97 },
-    animate: {
-      x: [xRange[0] * (Math.random() * 1.15), xRange[1] * (Math.random() * 1.15), xRange[0] * (Math.random() * 1.15)],
-      y: [yRange[0] * (Math.random() * 1.15), yRange[1] * (Math.random() * 1.15), yRange[0] * (Math.random() * 1.15)],
-      scale: [0.97, 1.03, 0.99],
-      rotate: [-3, 3, -2],
+    initial: { x: 0, y: 0, scale: 0.98 },
+    animateXY: {
+      x: [
+        xRange[0] * (0.6 + rand(0.8)),
+        xRange[1] * (0.6 + rand(0.8)),
+        xRange[0] * (0.6 + rand(0.8)),
+      ],
+      y: [
+        yRange[0] * (0.6 + rand(0.8)),
+        yRange[1] * (0.6 + rand(0.8)),
+        yRange[0] * (0.6 + rand(0.8)),
+      ],
+      rotate: [-3 + rand(6), 3 - rand(6), -2 + rand(4)],
+      scale: [0.98, 1.03, 0.99],
     },
-    transition: {
-      duration: 8 + Math.random() * 6,
+    motionTransition: {
+      duration: 10 + Math.random() * 8,
       repeat: Infinity,
       repeatType: "mirror",
       ease: "easeInOut",
       delay: delayBase,
     },
     styleScale: size,
+    // opacity animation params are added in Bubble
   };
 };
 
-const Bubble = ({ label, index }) => {
+const Bubble = ({ label, index, visibleProbability = 0.55 }) => {
   const props = generateFloatProps(index);
 
-  const onActivate = () => {
-    if (typeof window !== "undefined") {
-      console.log("Activated skill:", label);
-    }
-  };
+  // decide base delay & duration for opacity cycle
+  const opacityDelay = (index % 7) * 0.25 + Math.random() * 2.2; // spread starting times
+  const opacityDuration = 6 + Math.random() * 6; // how long one appear/disappear cycle lasts
 
+  // probability tweak: lower value -> fewer bubbles visible on average
+  // we still animate opacity for all, but scale the visible plateau
+  const visiblePlateau = visibleProbability; // 0..1 - higher = longer visible phase
+  // map to time fractions for keyframes (0..1)
+  // We'll produce keyframe times [0, tOnStart, tOnEnd, 1] where visible plateau lives between tOnStart and tOnEnd
+  const tOnStart = 0.12 + (1 - visiblePlateau) * 0.35 * Math.random();
+  const tOnEnd = tOnStart + 0.25 + visiblePlateau * 0.5;
+
+  const onActivate = () => {
+    if (typeof window !== "undefined") console.log("Activated skill:", label);
+  };
   const onKey = (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -416,11 +439,26 @@ const Bubble = ({ label, index }) => {
   return (
     <motion.button
       aria-label={`Skill: ${label}`}
-      className="absolute flex items-center justify-center rounded-full border bg-white/40 backdrop-blur-md px-4 py-2 text-sm font-medium shadow-lg select-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      className="absolute flex items-center justify-center rounded-full border bg-white/28 backdrop-blur-md px-4 py-2 text-sm font-medium shadow-lg select-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
       initial={props.initial}
-      animate={props.animate}
-      transition={props.transition}
-      whileHover={{ scale: 1.08, zIndex: 20 }}
+      animate={{
+        // merge XY motion and opacity keyframes
+        ...props.animateXY,
+        opacity: [0, 1, 1, 0],
+      }}
+      transition={{
+        ...props.motionTransition,
+        // explicit opacity timing: match duration & offset
+        opacity: {
+          duration: opacityDuration,
+          repeat: Infinity,
+          repeatType: "loop",
+          delay: opacityDelay,
+          ease: "easeInOut",
+          times: [0, tOnStart, tOnEnd > 0.98 ? 0.98 : tOnEnd, 1],
+        },
+      }}
+      whileHover={{ scale: 1.08, zIndex: 30 }}
       whileTap={{ scale: 0.98 }}
       onClick={onActivate}
       onKeyDown={onKey}
@@ -435,30 +473,45 @@ const Bubble = ({ label, index }) => {
   );
 };
 
-function SkillsFloating({ height = 2800 }) {
- const centers = [
-  { left: "20%", top: "25%" },
-  { left: "50%", top: "20%" },
-  { left: "80%", top: "25%" },
-  { left: "20%", top: "50%" },
-  { left: "50%", top: "45%" },
-  { left: "80%", top: "50%" },
-  { left: "20%", top: "75%" },
-  { left: "50%", top: "72%" },
-  { left: "80%", top: "75%" },
-  { left: "35%", top: "35%" },
-  { left: "65%", top: "35%" },
-  { left: "35%", top: "60%" },
-  { left: "65%", top: "60%" },
-  { left: "50%", top: "30%" },
-  { left: "50%", top: "80%" },
-  { left: "50%", top: "55%" },
-];
+function SkillsFloating({ height = 900 }) {
+  // expanded centers (16 positions) to match your large SKILL_GROUPS
+  const centers = [
+    { left: "12%", top: "20%" },
+    { left: "50%", top: "14%" },
+    { left: "88%", top: "20%" },
+    { left: "12%", top: "38%" },
+    { left: "50%", top: "36%" },
+    { left: "88%", top: "38%" },
+    { left: "8%", top: "60%" },
+    { left: "30%", top: "74%" },
+    { left: "50%", top: "70%" },
+    { left: "72%", top: "74%" },
+    { left: "92%", top: "60%" },
+    { left: "30%", top: "46%" },
+    { left: "70%", top: "46%" },
+    { left: "42%", top: "26%" },
+    { left: "58%", top: "26%" },
+    { left: "50%", top: "82%" },
+  ];
 
+  // responsive fallback: for small screens, stack clusters vertical-ish
+  const getCenterStyle = (gi) => {
+    if (typeof window !== "undefined" && window.innerWidth < 720) {
+      // vertical list spread
+      const left = "50%";
+      const top = `${20 + ((gi % 8) * 9)}%`;
+      return { left, top, transform: "translate(-50%, -50%)" };
+    }
+    const center = centers[gi % centers.length] || { left: "50%", top: "50%" };
+    return { left: center.left, top: center.top, transform: "translate(-50%, -50%)" };
+  };
+
+  // tune how many bubbles appear on average (0..1)
+  const visibleProbability = 0.5; // 0.3 = fewer visible, 0.7 = more visible
 
   return (
     <section id="skills-floating" className="relative w-full">
-      <div className="mx-auto px-4" style={{ maxWidth: "1200px" }}>
+      <div className="mx-auto px-4" style={{ maxWidth: "1400px" }}>
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl sm:text-3xl font-bold">Highlighted Skills</h2>
@@ -469,28 +522,48 @@ function SkillsFloating({ height = 2800 }) {
           </div>
         </div>
 
-        <div className="relative mt-6 rounded-2xl border border-gray-200/40 bg-gradient-to-b from-white/40 to-white/10 overflow-hidden" style={{ width: "100%", height }}>
+        <div
+          className="relative mt-6 rounded-2xl border border-gray-200/40 bg-gradient-to-b from-white/12 to-white/6 overflow-hidden"
+          style={{ width: "100%", height }}
+        >
+          {/* soft background shapes for depth */}
           <div className="absolute inset-0 pointer-events-none">
-            <motion.div className="absolute rounded-full opacity-30" style={{ width: 380, height: 380, background: "linear-gradient(135deg,#a78bfa, #60a5fa)", left: -60, top: -60 }} animate={{ scale: [1, 1.04, 1] }} transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }} />
-            <motion.div className="absolute rounded-full opacity-20" style={{ width: 260, height: 260, background: "linear-gradient(135deg,#34d399,#60a5fa)", right: -80, bottom: -40 }} animate={{ scale: [1, 1.06, 1] }} transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }} />
+            <motion.div
+              className="absolute rounded-full opacity-24"
+              style={{ width: 420, height: 420, background: "linear-gradient(135deg,#475569,#60a5fa)", left: -80, top: -60 }}
+              animate={{ scale: [1, 1.02, 1] }}
+              transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="absolute rounded-full opacity-18"
+              style={{ width: 300, height: 300, background: "linear-gradient(135deg,#10b981,#34d399)", right: -80, bottom: -40 }}
+              animate={{ scale: [1, 1.04, 1] }}
+              transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+            />
           </div>
 
+          {/* clusters */}
           {SKILL_GROUPS.map((group, gi) => (
-            <div key={group.title} className="absolute" style={{ left: centers[gi].left, top: centers[gi].top, transform: "translate(-50%, -50%)" }}>
-              <div className="relative w-[300px] h-[160px]">
-                <motion.div initial={{ y: -8, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.15 * gi, duration: 0.5 }} className="absolute -top-6 left-1/2 -translate-x-1/2 bg-white/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold shadow">
+            <div key={group.title} className="absolute" style={getCenterStyle(gi)}>
+              <div className="relative w-[320px] h-[180px]">
+                <motion.div
+                  initial={{ y: -8, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.12 * gi, duration: 0.45 }}
+                  className="absolute -top-6 left-1/2 -translate-x-1/2 bg-white/50 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold shadow"
+                >
                   {group.title}
                 </motion.div>
 
                 {group.skills.map((s, i) => {
                   const angle = (i / group.skills.length) * Math.PI * 2;
-                  const radius = 48 + (i % 3) * 18;
+                  const radius = 58 + (i % 3) * 22; // slightly larger radii to reduce overlap
                   const left = 50 + Math.round(Math.cos(angle) * radius);
                   const top = 50 + Math.round(Math.sin(angle) * radius);
 
                   return (
                     <div key={s} style={{ left: `${left}%`, top: `${top}%`, position: "absolute" }}>
-                      <Bubble label={s} index={gi * 10 + i} />
+                      <Bubble label={s} index={gi * 10 + i} visibleProbability={visibleProbability} />
                     </div>
                   );
                 })}
