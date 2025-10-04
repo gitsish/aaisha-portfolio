@@ -1,12 +1,60 @@
 // Portfolio.jsx
 import React, { useEffect, useState, useRef } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import Typed from "react-typed";
 
 // --- Simple smooth-scroll helper ---
 const scrollToId = (id) => {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
+// --- Tiny Typewriter (no external deps) ---
+const Typewriter = ({ strings = [], typeSpeed = 70, backSpeed = 40, backDelay = 900, loop = true }) => {
+  const [text, setText] = useState("");
+  const si = useRef(0); // string index
+  const pi = useRef(0); // char position
+  const deleting = useRef(false);
+  const timeoutRef = useRef(null);
+
+  useEffect(() => {
+    const tick = () => {
+      const current = strings[si.current] || "";
+      if (!deleting.current) {
+        // typing
+        if (pi.current < current.length) {
+          pi.current += 1;
+          setText(current.slice(0, pi.current));
+          timeoutRef.current = setTimeout(tick, typeSpeed);
+        } else {
+          // finished typing
+          deleting.current = true;
+          timeoutRef.current = setTimeout(tick, backDelay);
+        }
+      } else {
+        // deleting
+        if (pi.current > 0) {
+          pi.current -= 1;
+          setText(current.slice(0, pi.current));
+          timeoutRef.current = setTimeout(tick, Math.max(20, backSpeed));
+        } else {
+          // finished deleting
+          deleting.current = false;
+          si.current = (si.current + 1) % strings.length;
+          timeoutRef.current = setTimeout(tick, Math.max(80, typeSpeed / 2));
+          if (!loop && si.current === 0) {
+            // stop if not looping
+            clearTimeout(timeoutRef.current);
+          }
+        }
+      }
+    };
+
+    timeoutRef.current = setTimeout(tick, 500);
+    return () => clearTimeout(timeoutRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [strings.join("|"), typeSpeed, backSpeed, backDelay, loop]);
+
+  return <span>{text}<span className="inline-block w-[9px] h-[1.1em] align-middle ml-1 bg-white/80 animate-pulse" /></span>;
 };
 
 // --- Reusable animated section wrapper ---
@@ -81,7 +129,7 @@ const Hero = () => (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 grid md:grid-cols-2 gap-10 items-center">
       <div>
         <h1 className="text-3xl sm:text-5xl font-extrabold leading-tight">
-          <Typed
+          <Typewriter
             strings={[
               "Software Engineer",
               "Cloud Network Engineer",
