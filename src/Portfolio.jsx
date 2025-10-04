@@ -484,6 +484,7 @@ const CERTIFICATES = [
   { src: "flipkart.png", alt: "Flipkart Semifinalist" },
   { src: "walmart.png", alt: "Walmart Sparkathon — Participation / Prize" },
   { src: "vrsec.png", alt: "VRSEC Coding Competition — 2nd Prize" },
+   { src: "aiforgood.png", alt: "NIAT AIFORGOOD HACKATHON FINALIST" },
   // add more certificate images here
 ];
 
