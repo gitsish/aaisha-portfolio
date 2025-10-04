@@ -554,6 +554,7 @@ const Projects = () => (
 /* -----------------------------
    Updated Experience (toggle + awards + cert carousel)
    ----------------------------- */
+
 const CERTIFICATES = [
   { src: "/nptel.png", alt: "NPTEL Discipline Star Award" },
   { src: "/flipkart.png", alt: "Flipkart Semifinalist" },
@@ -563,20 +564,26 @@ const CERTIFICATES = [
   // add more certificate images here
 ];
 
+const DEFAULT_BG = "/carousel-bg.png"; // put carousel-bg.png in public/
+
 const Experience = () => {
   const [open, setOpen] = useState(true);
-
-  // Carousel state
   const [index, setIndex] = useState(0);
   const autoplayRef = useRef(null);
 
   useEffect(() => {
-    // Auto-advance every 4.5s
     autoplayRef.current = setInterval(() => {
       setIndex((i) => (i + 1) % CERTIFICATES.length);
     }, 4500);
     return () => clearInterval(autoplayRef.current);
   }, []);
+
+  const resetAutoplay = () => {
+    clearInterval(autoplayRef.current);
+    autoplayRef.current = setInterval(() => {
+      setIndex((i) => (i + 1) % CERTIFICATES.length);
+    }, 4500);
+  };
 
   const prev = () => {
     setIndex((i) => (i - 1 + CERTIFICATES.length) % CERTIFICATES.length);
@@ -589,12 +596,6 @@ const Experience = () => {
   const goto = (i) => {
     setIndex(i);
     resetAutoplay();
-  };
-  const resetAutoplay = () => {
-    clearInterval(autoplayRef.current);
-    autoplayRef.current = setInterval(() => {
-      setIndex((i) => (i + 1) % CERTIFICATES.length);
-    }, 4500);
   };
 
   const timeline = [
@@ -615,7 +616,6 @@ const Experience = () => {
           <h2 className="text-2xl sm:text-3xl font-bold">Experience & Awards</h2>
           <p className="text-sm text-neutral-400 mt-1">Major milestones, hackathon recognition and awards.</p>
         </div>
-
         <div className="flex items-center gap-3">
           <button
             onClick={() => setOpen((o) => !o)}
@@ -628,7 +628,13 @@ const Experience = () => {
         </div>
       </div>
 
-      <motion.div id="experience-details" initial={{ height: 0, opacity: 0 }} animate={open ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }} transition={{ duration: 0.45 }} className="overflow-hidden mt-6">
+      <motion.div
+        id="experience-details"
+        initial={{ height: 0, opacity: 0 }}
+        animate={open ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+        transition={{ duration: 0.45 }}
+        className="overflow-hidden mt-6"
+      >
         {/* Timeline */}
         <div className="relative before:absolute before:left-4 before:top-0 before:bottom-0 before:w-0.5 before:bg-neutral-200 dark:before:bg-neutral-800">
           {timeline.map((e, i) => (
@@ -646,24 +652,13 @@ const Experience = () => {
           <div className="rounded-2xl border p-4">
             <p className="font-semibold">Highlighted Awards</p>
             <ul className="list-disc pl-5 mt-2 text-sm">
-              <li>
-                <strong>NPTEL Discipline Star</strong> — National recognition; awarded for top performance across multiple NPTEL online courses.
-              </li>
-               <li>
-                <strong>AIFORGOOD NIAT Hackathon — Finalist</strong> — Reached top 10% teams all over India (Finals) for an intelligent Blood Warriors prototype.
-              </li>
-              <li>
-                <strong>Flipkart Hackathon — Semifinalist</strong> — Reached top teams (semifinals) for an intelligent retail/fulfillment prototype.
-              </li>
-              <li>
-                <strong>Walmart Sparkathon</strong> — Participated and showcased EcoRouteAI RL baseline; received recognition among top submissions.
-              </li>
-              <li>
-                <strong>VRSEC National TechFest — 2nd Prize</strong> — Awarded Top Coder among brilliant Coders in Competitive Coding Competition.
-              </li>
+              <li><strong>NPTEL Discipline Star</strong> — National recognition; awarded for top performance across multiple NPTEL online courses.</li>
+              <li><strong>AIFORGOOD NIAT Hackathon — Finalist</strong> — Reached top 10% teams all over India (Finals) for an intelligent Blood Warriors prototype.</li>
+              <li><strong>Flipkart Hackathon — Semifinalist</strong> — Reached top teams (semifinals) for an intelligent retail/fulfillment prototype.</li>
+              <li><strong>Walmart Sparkathon</strong> — Participated and showcased EcoRouteAI RL baseline; received recognition among top submissions.</li>
+              <li><strong>VRSEC National TechFest — 2nd Prize</strong> — Awarded Top Coder among brilliant Coders in Competitive Coding Competition.</li>
             </ul>
           </div>
-
           <div className="rounded-2xl border p-4">
             <p className="font-semibold">Impact & Notes</p>
             <ul className="list-disc pl-5 mt-2 text-sm">
@@ -673,96 +668,68 @@ const Experience = () => {
             </ul>
           </div>
         </div>
-/* -----------------------------
-   Certificate carousel (replacement)
-   Renders one slide at a time with a background filler
-   ----------------------------- */
 
-// Optional: update CERTIFICATES entries to include bg if you want image-specific backgrounds
-// Example:
-// { src: "/walmart.png", alt: "Walmart", bg: "/carousel-bg.png" }
-const DEFAULT_BG = "/carousel-bg.png";  //add a generic background image here (or keep as placeholder)
+        {/* Certificate carousel */}
+        <div className="mt-8">
+          <h3 className="font-semibold mb-3">Certificates & Photos</h3>
+          <div className="relative">
+            <div className="overflow-hidden rounded-2xl border bg-black/10">
+              <div className="relative w-full h-[360px] flex items-center justify-center">
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.45 }}
+                  className="absolute inset-0 flex items-center justify-center"
+                  style={{
+                    backgroundImage: `url("${CERTIFICATES[index]?.bg || DEFAULT_BG}")`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                >
+                  <div className="absolute inset-0 bg-black/20" />
+                  <img
+                    src={CERTIFICATES[index].src}
+                    alt={CERTIFICATES[index].alt}
+                    className="relative z-10 max-h-[88%] max-w-[92%] object-contain shadow-lg rounded"
+                    draggable={false}
+                  />
+                </motion.div>
 
-<div className="mt-8">
-  <h3 className="font-semibold mb-3">Certificates & Photos</h3>
-  <div className="relative">
-    {/* Carousel viewport */}
-    <div className="overflow-hidden rounded-2xl border bg-black/10">
-      <div className="relative w-full h-[360px] flex items-center justify-center">
-        {/* Active slide container (fills entire viewport with bg filler) */}
-        <motion.div
-          key={index}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.45 }}
-          className="absolute inset-0 flex items-center justify-center"
-          style={{
-            // prefer per-image bg if provided, otherwise default bg. If neither exists, fallback to gradient.
-            backgroundImage: `url("${CERTIFICATES[index]?.bg || DEFAULT_BG}")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          {/* subtle overlay to improve contrast over background */}
-          <div className="absolute inset-0 bg-black/20" />
+                {!CERTIFICATES[index]?.bg && (
+                  <div
+                    aria-hidden
+                    className="absolute inset-0"
+                    style={{
+                      background: "linear-gradient(135deg, rgba(99,102,241,0.12), rgba(236,72,153,0.08))",
+                    }}
+                  />
+                )}
+              </div>
+            </div>
 
-          {/* The certificate/photo itself sits above the background; object-contain keeps aspect ratio */}
-          <img
-            src={CERTIFICATES[index].src}
-            alt={CERTIFICATES[index].alt}
-            className="relative z-10 max-h-[88%] max-w-[92%] object-contain shadow-lg rounded"
-            draggable={false}
-          />
-        </motion.div>
+            {/* Prev / Next */}
+            <button onClick={prev} aria-label="Previous certificate" className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 shadow hover:bg-white/20 focus:outline-none">‹</button>
+            <button onClick={next} aria-label="Next certificate" className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 shadow hover:bg-white/20 focus:outline-none">›</button>
 
-        {/* If you want a pure gradient fallback when no bg image is available, add this behind motion.div */}
-        {!CERTIFICATES[index]?.bg && (
-          <div
-            aria-hidden
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(99,102,241,0.12), rgba(236,72,153,0.08))",
-            }}
-          />
-        )}
-      </div>
-    </div>
+            {/* Thumbnails */}
+            <div className="mt-4 flex items-center justify-center gap-2">
+              {CERTIFICATES.map((c, i) => (
+                <button key={c.src} onClick={() => goto(i)} className={`w-12 h-12 rounded overflow-hidden border ${i === index ? "ring-2 ring-indigo-500" : ""}`} aria-label={`View ${c.alt}`}>
+                  <img src={c.src} alt={c.alt} className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-neutral-400 text-center">Use ← → arrows, dots, or thumbnails to navigate. Autoplay enabled.</p>
+          </div>
+        </div>
+      </motion.div>
+    </section>
+  );
+};
 
-    {/* Prev / Next */}
-    <button
-      onClick={prev}
-      aria-label="Previous certificate"
-      className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 shadow hover:bg-white/20 focus:outline-none"
-    >
-      ‹
-    </button>
-    <button
-      onClick={next}
-      aria-label="Next certificate"
-      className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 shadow hover:bg-white/20 focus:outline-none"
-    >
-      ›
-    </button>
-
-    {/* Dots / thumbnails */}
-    <div className="mt-4 flex items-center justify-center gap-2">
-      {CERTIFICATES.map((c, i) => (
-        <button
-          key={c.src}
-          onClick={() => goto(i)}
-          className={`w-12 h-12 rounded overflow-hidden border ${i === index ? "ring-2 ring-indigo-500" : ""}`}
-          aria-label={`View ${c.alt}`}
-        >
-          <img src={c.src} alt={c.alt} className="w-full h-full object-cover" />
-        </button>
-      ))}
-    </div>
-    <p className="mt-2 text-xs text-neutral-400 text-center">Use ← → arrows, dots, or thumbnails to navigate. Autoplay enabled.</p>
-  </div>
-</div>
 
 // --- Contact ---
 const Contact = () => (
