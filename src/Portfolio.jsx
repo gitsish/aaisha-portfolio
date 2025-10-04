@@ -435,7 +435,7 @@ const Bubble = ({ label, index }) => {
   );
 };
 
-function SkillsFloating({ height = 1800 }) {
+function SkillsFloating({ height = 2800 }) {
  const centers = [
   { left: "20%", top: "25%" },
   { left: "50%", top: "20%" },
@@ -577,7 +577,7 @@ const CERTIFICATES = [
   // add more certificate images here
 ];
 
-const DEFAULT_BG = "/portfolioimage.png"; // put carousel-bg.png in public/
+const DEFAULT_BG = "/carousel-bg.png"; // put carousel-bg.png in public/
 
 const Experience = () => {
   const [open, setOpen] = useState(true);
