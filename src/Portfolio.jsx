@@ -436,12 +436,25 @@ const Bubble = ({ label, index }) => {
 };
 
 function SkillsFloating({ height = 420 }) {
-  const centers = [
-    { left: "20%", top: "30%" },
-    { left: "75%", top: "28%" },
-    { left: "20%", top: "72%" },
-    { left: "75%", top: "70%" },
-  ];
+ const centers = [
+  { left: "20%", top: "25%" },
+  { left: "50%", top: "20%" },
+  { left: "80%", top: "25%" },
+  { left: "20%", top: "50%" },
+  { left: "50%", top: "45%" },
+  { left: "80%", top: "50%" },
+  { left: "20%", top: "75%" },
+  { left: "50%", top: "72%" },
+  { left: "80%", top: "75%" },
+  { left: "35%", top: "35%" },
+  { left: "65%", top: "35%" },
+  { left: "35%", top: "60%" },
+  { left: "65%", top: "60%" },
+  { left: "50%", top: "30%" },
+  { left: "50%", top: "80%" },
+  { left: "50%", top: "55%" },
+];
+
 
   return (
     <section id="skills-floating" className="relative w-full">
