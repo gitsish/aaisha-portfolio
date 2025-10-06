@@ -205,7 +205,7 @@ const NetworkMonitor = () => (
           GitHub
         </a>
         <a
-          href="https://github.com/gitsish/NetworkMonitor/blob/main/README.m"
+          href="https://github.com/gitsish/NetworkMonitor/blob/main/README.md"
           target="_blank"
           rel="noreferrer"
           className="px-4 py-2 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-medium"
